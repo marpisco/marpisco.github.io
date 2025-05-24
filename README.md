@@ -3,7 +3,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/marpisco/marcopisco.com)
 ![GitHub languages](https://img.shields.io/github/languages/top/marpisco/marcopisco.com)
 
-![Screenshot of Website](https://image.thum.io/get/maxAge/12/width/500/https://marcopisco.com)
+![Screenshot of Website](https://image.thum.io/get/maxAge/1/width/500/https://marcopisco.com)
 
 My personal website's code.
 
