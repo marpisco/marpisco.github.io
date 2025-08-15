@@ -1,11 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-.sitetext {font-family: 'Roboto Mono', monospace;font-size:2em;color:white}
-.bold {font-weight: Bold;}
-.email {font-size: 1em}
+:root {
+  font-family: 'Roboto Mono', monospace;
+  color:white;
+  background-color: #0f172a;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.sitetext {font-size:2em;}
 .sitelink {font-size: 1em;}
 .sitesubtext {font-size: 1em;}
+.email {font-size: 1em;}
+.bold {font-weight: Bold;}
 a {color: inherit}
-body {background-color:#0f172a; text-align:center; margin: 0; padding: 0; overflow: hidden;}
 hr {width:10lh;}
 #particles-js {
   position: fixed;
