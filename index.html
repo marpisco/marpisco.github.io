@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Marco Pisco</title>
@@ -7,51 +8,14 @@
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.marcopisco.com" />
         <meta property="og:description" content="Marco Pisco" />
-        <meta name="theme-color" content="#00ffaa">
+        <meta name="theme-color" content="#0f172a">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="url" content="https://www.marcopisco.com">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="/assets/main.css">
+        <script src="/assets/index.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-        <style>
-          @import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
-          .sitetext {font-family: 'Roboto Mono', monospace;font-size:2em;color:white}
-          .bold {font-weight: Bold;}
-          .email {font-size: 1em}
-          .sitelink {font-size: 1em;}
-          a {color: inherit}
-          body {background-color:#0f172a; text-align:center; margin: 0; padding: 0; overflow: hidden;}
-          
-          #particles-js {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-          }
-          
-          .rainbow {
-              background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
-              -webkit-background-clip: text;
-              background-clip: text;
-              color: transparent;
-              animation: rainbow_animation 25s ease-in-out infinite;
-              background-size: 400% 100%;
-          }
-          @keyframes rainbow_animation {
-            0%,100% {
-              background-position: 0 0;
-            }
-
-            50% {
-              background-position: 100% 0;
-            }
-          }
-        </style>
     </head>
     <body>
       <div id="particles-js"></div>
@@ -62,96 +26,5 @@
         <hr style="width:10lh">
         <p class="sitetext sitelink rainbow"><a onclick="alert('Have a project you\'re looking for a Developer or Systems Administrator for? \nLet\'s have a chat! hello@marcopisco.com\n\nPortfolio coming soon.');">portfolio</a> <span class="sitetext sitelink">|</span> <a onclick="alert('Writeups coming soon.');">writeups</a> <span class="sitetext sitelink">|</span> <a onclick="alert('Testimonials coming soon.');">testimonials</a></p>
       </div>
-      
-      <script>
-        particlesJS("particles-js", {
-          "particles": {
-            "number": {
-              "value": 100,
-              "density": {
-                "enable": true,
-                "value_area": 800
-              }
-            },
-            "color": {
-              "value": ["#6666ff", "#0099ff", "#00ff00", "#ff3399"]
-            },
-            "shape": {
-              "type": "circle",
-              "stroke": {
-                "width": 0,
-                "color": "#000000"
-              }
-            },
-            "opacity": {
-              "value": 0.4,
-              "random": true,
-              "anim": {
-                "enable": true,
-                "speed": 1,
-                "opacity_min": 0.1,
-                "sync": false
-              }
-            },
-            "size": {
-              "value": 3,
-              "random": true,
-              "anim": {
-                "enable": true,
-                "speed": 4,
-                "size_min": 0.3,
-                "sync": false
-              }
-            },
-            "line_linked": {
-              "enable": true,
-              "distance": 150,
-              "color": "#ffffff",
-              "opacity": 0.2,
-              "width": 1
-            },
-            "move": {
-              "enable": true,
-              "speed": 2,
-              "direction": "none",
-              "random": false,
-              "straight": false,
-              "out_mode": "out",
-              "bounce": false,
-              "attract": {
-                "enable": false,
-                "rotateX": 600,
-                "rotateY": 1200
-              }
-            }
-          },
-          "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-              "onhover": {
-                "enable": true,
-                "mode": "grab"
-              },
-              "onclick": {
-                "enable": true,
-                "mode": "push"
-              },
-              "resize": true
-            },
-            "modes": {
-              "grab": {
-                "distance": 140,
-                "line_linked": {
-                  "opacity": 0.5
-                }
-              },
-              "push": {
-                "particles_nb": 4
-              }
-            }
-          },
-          "retina_detect": true
-        });
-      </script>
     </body>
 </html>

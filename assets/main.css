@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+.sitetext {font-family: 'Roboto Mono', monospace;font-size:2em;color:white}
+.bold {font-weight: Bold;}
+.email {font-size: 1em}
+.sitelink {font-size: 1em;}
+.sitesubtext {font-size: 1em;}
+a {color: inherit}
+body {background-color:#0f172a; text-align:center; margin: 0; padding: 0; overflow: hidden;}
+hr {width:10lh;}
+#particles-js {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.rainbow {
+    background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 25s ease-in-out infinite;
+    background-size: 400% 100%;
+}
+@keyframes rainbow_animation {
+  0%,100% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 100% 0;
+  }
+}
