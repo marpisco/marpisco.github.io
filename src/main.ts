@@ -154,59 +154,55 @@ app.innerHTML = `
     </div>
   </header>
 
-  <main class="container">
-    <section id="home" class="hero">
-      <div class="hero-grid"></div>
-      <div class="avatar-wrap">
-        <img class="avatar" src="/images/marco-profile.png" alt="Marco Pisco" />
-        <span id="discord-avatar-status" class="status-dot offline avatar-status"></span>
+  <main class="container page-shell">
+    <section id="home" class="hero-panel panel">
+      <div class="hero-copy">
+        <p class="eyebrow">Portfolio</p>
+        <h1>
+          Hi, I am <span class="gradient-name">Marco Pisco</span>.
+        </h1>
+        <p class="hero-alias">aka <span class="alias-name" data-tip="nvld">neverland</span></p>
+        <p class="hero-subtitle">
+          Student, Developer and System Administrator based in Portugal.
+        </p>
+        <div id="hero-status" class="hero-status hidden"></div>
       </div>
-      <h1>
-        Hi, I am <span class="gradient-name">Marco Pisco</span>.
-      </h1>
-      <p class="hero-alias">aka <span class="alias-name" data-tip="nvld">neverland</span></p>
-      <p>
-        Student, Developer and System Administrator based in Portugal.
-      </p>
-      <div id="hero-status" class="hero-status hidden"></div>
+      <aside class="hero-media">
+        <div class="avatar-frame">
+          <img class="avatar" src="/images/marco-profile.png" alt="Marco Pisco" />
+          <span id="discord-avatar-status" class="status-dot offline avatar-status"></span>
+        </div>
+        <p class="hero-note">
+          Building reliable systems, safer infrastructure, and practical software.
+        </p>
+      </aside>
     </section>
 
-    <hr />
-
-    <section id="about" class="split-section">
-      <div>
-        <p class="section-id">// 01.</p>
+    <section class="info-grid">
+      <article id="about" class="panel about-panel">
         <h2>About Me</h2>
-      </div>
-      <div class="section-content">
-        <p>
-          I am a student, software developer, and system administrator focused on
-          secure infrastructure, practical product delivery, and dependable operations.
-        </p>
-        <p>
-          I work across software engineering, systems administration, and security-focused
-          infrastructure, with a strong focus on reliability, automation, and maintainable operations.
-        </p>
-      </div>
-    </section>
+        <div class="section-content">
+          <p>
+            I am a student, software developer, and system administrator focused on
+            secure infrastructure, practical product delivery, and dependable operations.
+          </p>
+          <p>
+            I work across software engineering, systems administration, and security-focused
+            infrastructure, with a strong focus on reliability, automation, and maintainable operations.
+          </p>
+        </div>
+      </article>
 
-    <hr />
-
-    <section id="skills" class="split-section">
-      <div>
-        <p class="section-id">// 02.</p>
+      <article id="skills" class="panel skills-panel">
         <h2>Tech Stack</h2>
-      </div>
-      <div class="pill-wrap">
-        ${techStack.map((skill) => `<span class="pill">${skill}</span>`).join('')}
-      </div>
+        <div class="pill-wrap">
+          ${techStack.map((skill) => `<span class="pill">${skill}</span>`).join('')}
+        </div>
+      </article>
     </section>
 
-    <hr />
-
-    <section id="experience" class="stack-section">
-      <div>
-        <p class="section-id">// 03.</p>
+    <section id="experience" class="panel section-panel">
+      <div class="section-head">
         <h2>Experience</h2>
       </div>
       <div class="cards">
@@ -228,11 +224,8 @@ app.innerHTML = `
       </div>
     </section>
 
-    <hr />
-
-    <section id="education" class="stack-section">
-      <div>
-        <p class="section-id">// 04.</p>
+    <section id="education" class="panel section-panel">
+      <div class="section-head">
         <h2>Education</h2>
       </div>
       <div class="cards">
@@ -254,21 +247,15 @@ app.innerHTML = `
       </div>
     </section>
 
-    <hr />
-
-    <section id="writeups" class="stack-section">
-      <div>
-        <p class="section-id">// 05.</p>
+    <section id="writeups" class="panel section-panel">
+      <div class="section-head">
         <h2>Posts</h2>
       </div>
       <div id="writeups-list" class="cards"></div>
       <article id="writeup-viewer" class="writeup-viewer hidden"></article>
     </section>
 
-    <hr />
-
-    <section id="contact" class="contact">
-      <p class="section-id">// 06.</p>
+    <section id="contact" class="panel contact-panel">
       <h2>Get In Touch</h2>
       <p>
         If you need help with platform engineering, production hardening,
@@ -458,20 +445,37 @@ function closeWriteup(): void {
 }
 
 function setupScrollReveal(root: ParentNode = document): void {
-  const targets = root.querySelectorAll<HTMLElement>(
-    '#about h2, #about p, #skills h2, #skills .pill, #experience h2, #experience .card, #education h2, #education .card, #writeups h2, #writeups .card, #contact h2, #contact p, #contact .social-btn',
+  const textTargets = Array.from(
+    root.querySelectorAll<HTMLElement>(
+    '.hero-copy h1, .hero-copy p, .hero-note, .panel h2, .panel .section-content p, .panel .pill, .panel .card, .panel .social-btn',
+    ),
   );
+  const blockTargets = Array.from(
+    root.querySelectorAll<HTMLElement>(
+      '.hero-panel, .about-panel, .skills-panel, .section-panel, .contact-panel, .hero-media, .avatar-frame, .hero-status .status-card, .contact-actions, .writeup-viewer',
+    ),
+  );
+  const targets = Array.from(new Set([...textTargets, ...blockTargets]));
 
   if (targets.length === 0) {
     return;
   }
 
-  let stagger = 0;
-  for (const target of targets) {
+  let textStagger = 0;
+  for (const target of textTargets) {
     if (!target.classList.contains('reveal-text')) {
       target.classList.add('reveal-text');
-      target.style.setProperty('--reveal-delay', `${Math.min(stagger * 55, 260)}ms`);
-      stagger += 1;
+      target.style.setProperty('--reveal-delay', `${Math.min(textStagger * 55, 260)}ms`);
+      textStagger += 1;
+    }
+  }
+
+  let blockStagger = 0;
+  for (const target of blockTargets) {
+    if (!target.classList.contains('reveal-block')) {
+      target.classList.add('reveal-block');
+      target.style.setProperty('--reveal-delay', `${Math.min(blockStagger * 70, 320)}ms`);
+      blockStagger += 1;
     }
   }
 
