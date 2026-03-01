@@ -122,12 +122,10 @@ main {
   height: 132px;
   border-radius: 50%;
   border: 2px solid rgba(45, 212, 255, 0.45);
-  display: grid;
-  place-items: center;
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: #9be8ff;
-  background: linear-gradient(160deg, rgba(45, 212, 255, 0.2), rgba(79, 255, 209, 0.08));
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  background: #101c2d;
   box-shadow: 0 0 34px rgba(45, 212, 255, 0.22);
 }
 

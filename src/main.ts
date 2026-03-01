@@ -119,7 +119,7 @@ app.innerHTML = `
   <main class="container">
     <section id="home" class="hero">
       <div class="hero-grid"></div>
-      <div class="avatar" aria-hidden="true">M</div>
+      <img class="avatar" src="/images/marco-profile.png" alt="Marco Pisco" />
       <h1>
         Hi, I am <span class="gradient-name">Marco Pisco</span>.
       </h1>
