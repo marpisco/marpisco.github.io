@@ -67,16 +67,39 @@ const techStack = [
   'C#',
   '.NET Framework',
   'Python',
+  'PHP',
+  'HTML/CSS',
+  'Bootstrap',
+  'Arduino IDE',
+  'Computer Architecture',
+  'Information Technology Training',
+  'Programming Languages',
+  'Programming',
+  'Mathematics',
+  'File Sharing',
   'SIP',
+  'ERP Implementations',
+  'ERP Software',
+  'Enterprise Resource Planning (ERP)',
   'Primavera ERP',
+  'Database Servers',
+  'Database Systems',
+  'SQL',
   'Windows Server 2022',
   'Active Directory',
+  'IIS',
+  'Windows',
+  'Software Installation',
+  'Microsoft Office',
+  'VBA',
+  'Informatics',
+  'Software Prototyping',
+  'Information Systems',
   'MySQL',
   'MariaDB',
   'PostgreSQL',
   'C++',
   'Java',
-  'HTML/CSS',
   'Linux',
   'Proxmox',
   'Docker',
@@ -124,8 +147,37 @@ const education: Education[] = [
     school: 'Agrupamento de Escolas Joaquim Inacio da Cruz Sobral',
     program: 'Professional Course, IT Systems',
     summary:
-      'Grade 12th. Training includes Office/VBA, web development (HTML/CSS), hardware and networking, Windows Server 2022 Active Directory, ERP deployment, programming (C++, C#, .NET, Java), SQL databases, and Apache/IIS administration.',
-    tags: ['Windows Server 2022', 'Active Directory', 'SQL', 'C++', 'C#', 'Java'],
+      'Grade 12th. Advanced computer training including Microsoft Office (Excel with VBA, Word, PowerPoint), web development (HTML/CSS), computer architecture, TCP/IP networking, and Windows installation/setup. Hands-on Windows Server 2022 Active Directory work with user management, file sharing, GPOs, and security groups. ERP deployment with Primavera, programming in C++, C#, .NET, Java, and Python, SQL database management (MySQL, MariaDB, PostgreSQL), web server administration with Apache and IIS, and development practice with tools such as Arduino IDE and PHP.',
+    tags: [
+      'Git',
+      'Informatics',
+      'Information Technology Training',
+      'Programming Languages',
+      'Programming',
+      'Fundamentals',
+      'Computer Architecture',
+      'Mathematics',
+      'Windows Server 2022',
+      'Active Directory',
+      'TCP/IP',
+      'GPO',
+      'File Sharing',
+      'Primavera ERP',
+      'SQL',
+      'MySQL',
+      'MariaDB',
+      'PostgreSQL',
+      'Apache',
+      'IIS',
+      'Python',
+      'PHP',
+      'Arduino IDE',
+      'C++',
+      'C#',
+      '.NET Framework',
+      'Java',
+      'VBA',
+    ],
   },
 ];
 
@@ -161,20 +213,31 @@ app.innerHTML = `
         <h1>
           Hi, I am <span class="gradient-name">Marco Pisco</span>.
         </h1>
-        <p class="hero-alias">aka <span class="alias-name" data-tip="nvld">neverland</span></p>
+        <p class="hero-alias">
+          <span>aka <span class="alias-name" data-tip="nvld">neverland</span></span>
+          <span class="alias-divider" aria-hidden="true"></span>
+          <span
+            id="discord-presence-badge"
+            class="alias-status offline"
+            data-tip="According to Discord."
+          >
+            <span class="presence-dot" aria-hidden="true"></span>
+            <span id="discord-presence-text" class="alias-status-text">Currently Offline</span>
+          </span>
+        </p>
         <p class="hero-subtitle">
-          Student, Developer and System Administrator based in Portugal.
+          Student, Developer and System Administrator based in
+          <span class="location-inline">
+            Portugal
+            <img class="inline-flag" src="/images/portugal-flag.svg" alt="Portugal flag" />
+          </span>.
         </p>
         <div id="hero-status" class="hero-status hidden"></div>
       </div>
       <aside class="hero-media">
         <div class="avatar-frame">
           <img class="avatar" src="/images/marco-profile.png" alt="Marco Pisco" />
-          <span id="discord-avatar-status" class="status-dot offline avatar-status"></span>
         </div>
-        <p class="hero-note">
-          Building reliable systems, safer infrastructure, and practical software.
-        </p>
       </aside>
     </section>
 
@@ -447,7 +510,7 @@ function closeWriteup(): void {
 function setupScrollReveal(root: ParentNode = document): void {
   const textTargets = Array.from(
     root.querySelectorAll<HTMLElement>(
-    '.hero-copy h1, .hero-copy p, .hero-note, .panel h2, .panel .section-content p, .panel .pill, .panel .card, .panel .social-btn',
+      '.hero-copy h1, .hero-copy p, .panel h2, .panel .section-content p, .panel .pill, .panel .card, .panel .social-btn',
     ),
   );
   const blockTargets = Array.from(
@@ -508,6 +571,36 @@ function setupScrollReveal(root: ParentNode = document): void {
   }
 }
 
+function setupNameGradientTrack(): void {
+  const name = document.querySelector<HTMLElement>('.gradient-name');
+  if (!name) {
+    return;
+  }
+
+  const updateGradient = (clientX: number): void => {
+    const rect = name.getBoundingClientRect();
+    if (rect.width <= 0) {
+      name.style.setProperty('--grad-x', '50%');
+      return;
+    }
+    const clampedX = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+    const percent = (clampedX / rect.width) * 100;
+    name.style.setProperty('--grad-x', `${percent}%`);
+  };
+
+  name.addEventListener('mouseenter', (event) => {
+    updateGradient(event.clientX);
+  });
+
+  name.addEventListener('mousemove', (event) => {
+    updateGradient(event.clientX);
+  });
+
+  name.addEventListener('mouseleave', () => {
+    name.style.setProperty('--grad-x', '50%');
+  });
+}
+
 function statusLabel(status: LanyardData['discord_status']): string {
   if (status === 'online') {
     return 'Online';
@@ -519,6 +612,13 @@ function statusLabel(status: LanyardData['discord_status']): string {
     return 'Do Not Disturb';
   }
   return 'Offline';
+}
+
+function statusSentence(status: LanyardData['discord_status']): string {
+  if (status === 'dnd') {
+    return 'Currently in Do Not Disturb';
+  }
+  return `Currently ${statusLabel(status)}`;
 }
 
 function activityIcon(activity: LanyardActivity): string {
@@ -590,15 +690,18 @@ function embedDetails(activity: LanyardActivity, title: string, subtitle: string
 }
 
 function applyDiscordPresence(data: LanyardData): void {
-  const dot = document.querySelector<HTMLElement>('#discord-avatar-status');
+  const badge = document.querySelector<HTMLElement>('#discord-presence-badge');
+  const badgeText = document.querySelector<HTMLElement>('#discord-presence-text');
   const heroStatus = document.querySelector<HTMLElement>('#hero-status');
-  if (!dot || !heroStatus) {
+  if (!heroStatus) {
     return;
   }
 
-  dot.className = `status-dot ${data.discord_status} avatar-status`;
-  dot.setAttribute('data-tip', statusLabel(data.discord_status));
-  dot.setAttribute('aria-label', `Discord status: ${statusLabel(data.discord_status)}`);
+  if (badge && badgeText) {
+    badge.className = `alias-status ${data.discord_status}`;
+    badgeText.textContent = statusSentence(data.discord_status);
+    badge.setAttribute('aria-label', `Discord status: ${statusLabel(data.discord_status)}`);
+  }
 
   const cards: string[] = [];
 
@@ -760,5 +863,6 @@ async function loadWriteups(): Promise<void> {
 }
 
 setupScrollReveal();
+setupNameGradientTrack();
 connectLanyardWebSocket();
 void loadWriteups();
