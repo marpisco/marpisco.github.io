@@ -1,20 +1,76 @@
-# marcopisco.com
-![GitHub last commit](https://img.shields.io/github/last-commit/marpisco/marcopisco.com)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/marpisco/marcopisco.com)
-![GitHub languages](https://img.shields.io/github/languages/top/marpisco/marcopisco.com)
+# Marco Pisco Website
 
-![Screenshot of Website](https://image.thum.io/get/maxAge/1/width/500/https://marcopisco.com)
+Personal website source for [marcopisco.com](https://marcopisco.com), built with TypeScript + Vite and deployed with GitHub Pages.
 
-My personal website's code.
+![GitHub last commit](https://img.shields.io/github/last-commit/marpisco/marpisco.github.io)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/marpisco/marpisco.github.io)
+![GitHub language count](https://img.shields.io/github/languages/count/marpisco/marpisco.github.io)
 
-## Table of Contents
-On the root of this repository there are 3 files. The site itself, the README you're reading, and the pointless license (because nobody will ever actually use this other than myself).
+## Tech Stack
+
+- TypeScript
+- Vite
+- Vanilla HTML/CSS
+- GitHub Actions + GitHub Pages
+- Lanyard WebSocket API (Discord live presence)
+
+## Features
+
+- Single-page portfolio layout (hero, about, tech stack, experience, education, contact)
+- Live Discord presence cards using Lanyard WebSocket
+- Posts section backed by local Markdown files
+- Smooth reveal and hover animations
+- Responsive layout for desktop and mobile
+
+## Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+Default dev URL: `http://localhost:5173`
+
+## Build and Preview
+
+```bash
+npm run build
+npm run preview
+```
+
+The production build is generated in `dist/`.
+
+## Posts Workflow
+
+Posts are loaded from the `public/writeups` directory:
+
+- `public/writeups/index.json` contains metadata for each post
+- `public/writeups/<slug>.md` contains the Markdown content
+
+Example `index.json` item:
+
+```json
+{
+  "slug": "example-post",
+  "title": "Example Post",
+  "date": "2026-01-15",
+  "summary": "Short summary.",
+  "tags": ["tag1", "tag2"]
+}
+```
+
+## Deployment
+
+Deployment is fully automated by [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml):
+
+1. Trigger on push to `main`
+2. Install dependencies with `npm ci`
+3. Build with `npm run build`
+4. Upload `dist/` artifact
+5. Deploy to GitHub Pages
+
+Custom domain is configured via `CNAME` (`marcopisco.com`).
 
 ## License
-This repository and work are licensed under the **GNU General Public License v3.0**. You can read the license and research about it.
 
-## Warranty
-This website will be updated whenever I need it updated, and whenever I feel like it. There isn't a schedule of updates for it.
-
-## Credits
-Nobody else other than me worked on this project. Have an idea or a better way to do what I did? Great, make a pull request and I might approve it.
+This project is licensed under the GNU General Public License v3.0. See [LICENSE](LICENSE).
