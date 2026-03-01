@@ -46,6 +46,7 @@ body {
   background: rgba(5, 10, 18, 0.45);
   border-bottom: 1px solid rgba(26, 43, 68, 0.65);
   z-index: 10;
+  animation: slide-down 480ms ease-out both;
 }
 
 .nav-wrap {
@@ -115,6 +116,7 @@ main {
   background-size: 34px 34px;
   mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 60%, transparent 100%);
   z-index: -1;
+  animation: grid-drift 16s linear infinite;
 }
 
 .avatar {
@@ -127,6 +129,8 @@ main {
   object-position: center;
   background: #101c2d;
   box-shadow: 0 0 34px rgba(45, 212, 255, 0.22);
+  opacity: 0;
+  animation: fade-up 700ms ease-out 120ms both, avatar-float 6s ease-in-out 900ms infinite;
 }
 
 .hero h1 {
@@ -135,6 +139,8 @@ main {
   line-height: 1;
   letter-spacing: -0.04em;
   font-weight: 800;
+  opacity: 0;
+  animation: fade-up 700ms ease-out 220ms both;
 }
 
 .gradient-name {
@@ -150,6 +156,55 @@ main {
   font-size: clamp(1rem, 2.3vw, 1.45rem);
   color: var(--text-dim);
   line-height: 1.6;
+  opacity: 0;
+  animation: fade-up 700ms ease-out 420ms both;
+}
+
+.hero-alias {
+  font-family: var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  font-size: 0.74rem;
+  color: #8dcff7;
+  opacity: 0;
+  animation: fade-up 700ms ease-out 320ms both;
+}
+
+.alias-name {
+  position: relative;
+  display: inline-block;
+  color: #b6e8ff;
+  transition: transform 180ms ease, color 180ms ease, text-shadow 180ms ease;
+}
+
+.alias-name::before {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  color: #d9f4ff;
+  background: rgba(8, 19, 36, 0.95);
+  border: 1px solid rgba(90, 154, 210, 0.65);
+  border-radius: 6px;
+  padding: 0.14rem 0.33rem;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.alias-name:hover {
+  color: #e7f9ff;
+  text-shadow: 0 0 14px rgba(79, 255, 209, 0.4);
+  animation: alias-hover 380ms ease;
+}
+
+.alias-name:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 hr {
@@ -227,19 +282,6 @@ h2 {
   padding: 1.6rem;
   min-height: 260px;
   transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
-  animation: rise 700ms both;
-}
-
-.card:nth-child(2) {
-  animation-delay: 80ms;
-}
-
-.card:nth-child(3) {
-  animation-delay: 160ms;
-}
-
-.card:nth-child(4) {
-  animation-delay: 240ms;
 }
 
 .card:hover {
@@ -290,6 +332,17 @@ h2 {
 
 .hidden {
   display: none;
+}
+
+.reveal-text {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 560ms ease, transform 560ms ease;
+}
+
+.reveal-text.in-view {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .writeup-viewer {
@@ -388,6 +441,51 @@ footer {
   font-size: 0.9rem;
 }
 
+.discord-wrap {
+  padding: 0 0 1.1rem;
+}
+
+.discord-presence {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  color: var(--text-dim);
+  font-size: 0.88rem;
+}
+
+.discord-line {
+  margin: 0;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 0 rgba(145, 161, 184, 0.4);
+}
+
+.status-dot.online {
+  background: #22c55e;
+  box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.15);
+}
+
+.status-dot.idle {
+  background: #eab308;
+  box-shadow: 0 0 0 6px rgba(234, 179, 8, 0.15);
+}
+
+.status-dot.dnd {
+  background: #ef4444;
+  box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.15);
+}
+
+.status-dot.offline {
+  background: #64748b;
+  box-shadow: 0 0 0 6px rgba(100, 116, 139, 0.15);
+}
+
 .footer-wrap div {
   display: flex;
   gap: 1rem;
@@ -410,6 +508,66 @@ footer {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes avatar-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes grid-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-34px, -34px, 0);
+  }
+}
+
+@keyframes alias-hover {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  35% {
+    transform: translateY(-1px) scale(1.04);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
@@ -445,5 +603,9 @@ footer {
     flex-direction: column;
     justify-content: center;
     padding: 0.65rem 0;
+  }
+
+  .discord-presence {
+    justify-content: center;
   }
 }

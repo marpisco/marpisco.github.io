@@ -24,6 +24,28 @@ type WriteupMeta = {
   tags: string[];
 };
 
+type LanyardActivity = {
+  type: number;
+  name: string;
+  details?: string;
+  state?: string;
+};
+
+type LanyardData = {
+  discord_status: 'online' | 'idle' | 'dnd' | 'offline';
+  listening_to_spotify: boolean;
+  spotify?: {
+    song: string;
+    artist: string;
+  };
+  activities: LanyardActivity[];
+};
+
+type LanyardResponse = {
+  success: boolean;
+  data: LanyardData;
+};
+
 const techStack = [
   'Git',
   'C#',
@@ -123,6 +145,7 @@ app.innerHTML = `
       <h1>
         Hi, I am <span class="gradient-name">Marco Pisco</span>.
       </h1>
+      <p class="hero-alias">aka <span class="alias-name" data-tip="nvld">neverland</span></p>
       <p>
         Student and Developer based in Torres Vedras, Lisbon, Portugal.
       </p>
@@ -241,6 +264,12 @@ app.innerHTML = `
       <div>
         <a href="https://github.com/marpisco" target="_blank" rel="noreferrer">GitHub</a>
         <a href="https://www.linkedin.com/in/marco-p-440068329/" target="_blank" rel="noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <div class="container discord-wrap">
+      <div id="discord-presence" class="discord-presence">
+        <span class="status-dot offline"></span>
+        <p class="discord-line">Discord: connecting...</p>
       </div>
     </div>
   </footer>
@@ -393,6 +422,103 @@ function closeWriteup(): void {
   viewer.innerHTML = '';
 }
 
+function setupScrollReveal(root: ParentNode = document): void {
+  const targets = root.querySelectorAll<HTMLElement>(
+    '#about h2, #about p, #skills h2, #skills .pill, #experience h2, #experience .card, #education h2, #education .card, #writeups h2, #writeups .card, #contact h2, #contact p, #contact .cta',
+  );
+
+  if (targets.length === 0) {
+    return;
+  }
+
+  let stagger = 0;
+  for (const target of targets) {
+    if (!target.classList.contains('reveal-text')) {
+      target.classList.add('reveal-text');
+      target.style.transitionDelay = `${Math.min(stagger * 55, 260)}ms`;
+      stagger += 1;
+    }
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    for (const target of targets) {
+      target.classList.add('in-view');
+    }
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      }
+    },
+    {
+      threshold: 0.18,
+      rootMargin: '0px 0px -8% 0px',
+    },
+  );
+
+  for (const target of targets) {
+    if (!target.classList.contains('in-view')) {
+      observer.observe(target);
+    }
+  }
+}
+
+function mapDiscordStatus(status: LanyardData['discord_status']): string {
+  if (status === 'dnd') {
+    return 'Do Not Disturb';
+  }
+  if (status === 'idle') {
+    return 'Idle';
+  }
+  if (status === 'online') {
+    return 'Online';
+  }
+  return 'Offline';
+}
+
+async function updateDiscordPresence(): Promise<void> {
+  const presence = document.querySelector<HTMLElement>('#discord-presence');
+  if (!presence) {
+    return;
+  }
+
+  try {
+    const response = await fetch('https://api.lanyard.rest/v1/users/1060304285457448970');
+    if (!response.ok) {
+      throw new Error('Lanyard unavailable');
+    }
+
+    const payload = (await response.json()) as LanyardResponse;
+    if (!payload.success || !payload.data) {
+      throw new Error('Invalid Lanyard payload');
+    }
+
+    const { data } = payload;
+    const statusLabel = mapDiscordStatus(data.discord_status);
+    const nowPlaying = data.listening_to_spotify && data.spotify
+      ? `${data.spotify.song} - ${data.spotify.artist}`
+      : 'Nothing playing';
+
+    presence.innerHTML = `
+      <span class="status-dot ${data.discord_status}"></span>
+      <p class="discord-line"><strong>Discord:</strong> ${escapeHtml(statusLabel)}</p>
+      <p class="discord-line"><strong>Now playing:</strong> ${escapeHtml(nowPlaying)}</p>
+    `;
+  } catch {
+    presence.innerHTML = `
+      <span class="status-dot offline"></span>
+      <p class="discord-line"><strong>Discord:</strong> unavailable</p>
+      <p class="discord-line"><strong>Now playing:</strong> unavailable</p>
+    `;
+  }
+}
+
 async function loadWriteups(): Promise<void> {
   const list = document.querySelector<HTMLElement>('#writeups-list');
   if (!list) {
@@ -409,6 +535,7 @@ async function loadWriteups(): Promise<void> {
     const writeups = (await response.json()) as WriteupMeta[];
     if (!Array.isArray(writeups) || writeups.length === 0) {
       list.innerHTML = '<article class="card"><p class="summary">No writeups yet... :(</p></article>';
+      setupScrollReveal(list);
       return;
     }
 
@@ -442,9 +569,17 @@ async function loadWriteups(): Promise<void> {
         }
       });
     }
+
+    setupScrollReveal(list);
   } catch {
     list.innerHTML = '<article class="card"><p class="summary">Writeups index missing. Add files to public/writeups.</p></article>';
+    setupScrollReveal(list);
   }
 }
 
+setupScrollReveal();
+void updateDiscordPresence();
+setInterval(() => {
+  void updateDiscordPresence();
+}, 20000);
 void loadWriteups();
