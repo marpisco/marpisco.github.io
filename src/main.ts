@@ -773,7 +773,7 @@ function applyDiscordPresence(data: LanyardData): void {
             ${emojiUrl ? `<img class="status-card-image" src="${escapeHtml(emojiUrl)}" alt="" />` : escapeHtml(emoji ?? '✨')}
           </div>
           <div class="status-card-body">
-            <p class="hero-status-line status-card-label">Status</p>
+            <p class="hero-status-line status-card-label">Voicechannel Status</p>
             <p class="hero-status-line status-card-title">${escapeHtml(statusText)}</p>
           </div>
         </article>
