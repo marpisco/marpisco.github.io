@@ -16,13 +16,13 @@
 - Keep Discord presence integration working (Lanyard websocket flow in `src/main.ts`)
 - Keep posts loading from `public/writeups/index.json`
 - Avoid changing deployment workflow unless explicitly requested
+- Create a git commit after completing each requested change
 
 ## Commands
-- `npm run dev`
-- `npx tsc --noEmit`
-- `npm run build`
+- `bun run dev`
+- `bun run typecheck`
+- `bun run build`
 
 ## Commit style
 - Use concise imperative commit messages
 - Commit only files related to the requested change
-

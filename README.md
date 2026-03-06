@@ -25,8 +25,8 @@ Personal website source for [marcopisco.com](https://marcopisco.com), built with
 ## Local Development
 
 ```bash
-npm install
-npm run dev
+bun install
+bun run dev
 ```
 
 Default dev URL: `http://localhost:5173`
@@ -34,8 +34,9 @@ Default dev URL: `http://localhost:5173`
 ## Build and Preview
 
 ```bash
-npm run build
-npm run preview
+bun run typecheck
+bun run build
+bun run preview
 ```
 
 The production build is generated in `dist/`.
@@ -64,8 +65,8 @@ Example `index.json` item:
 Deployment is fully automated by [`.github/workflows/deploy-pages.yml`](.github/workflows/deploy-pages.yml):
 
 1. Trigger on push to `main`
-2. Install dependencies with `npm ci`
-3. Build with `npm run build`
+2. Install dependencies with `bun ci`
+3. Build with `bun run build`
 4. Upload `dist/` artifact
 5. Deploy to GitHub Pages
 
