@@ -38,6 +38,8 @@ type LanyardActivity = {
   };
   emoji?: {
     name: string;
+    id?: string;
+    animated?: boolean;
   };
 };
 
@@ -638,6 +640,52 @@ function activityIcon(activity: LanyardActivity): string {
   return '✨';
 }
 
+function customStatusEmojiUrl(activity: LanyardActivity): string | null {
+  if (!activity.emoji?.id) {
+    return null;
+  }
+
+  const extension = activity.emoji.animated ? 'gif' : 'webp';
+  return `https://cdn.discordapp.com/emojis/${activity.emoji.id}.${extension}?size=96&quality=lossless`;
+}
+
+function normalizedActivityEmoji(activity: LanyardActivity): string | null {
+  const raw = activity.emoji?.name?.trim();
+  if (!raw) {
+    return null;
+  }
+
+  if (/\p{Extended_Pictographic}/u.test(raw)) {
+    return raw;
+  }
+
+  if (/[ÃÂÐâð]/u.test(raw)) {
+    return null;
+  }
+
+  return raw;
+}
+
+function isCustomStatusActivity(activity: LanyardActivity): boolean {
+  const name = activity.name.trim().toLowerCase();
+  const state = activity.state?.trim().toLowerCase();
+  return activity.type === 4 || name === 'hang status' || Boolean(state?.startsWith('custom:'));
+}
+
+function customStatusText(activity: LanyardActivity): string | null {
+  const details = activity.details?.trim();
+  if (details) {
+    return details;
+  }
+
+  const state = activity.state?.trim();
+  if (state && !state.toLowerCase().startsWith('custom:')) {
+    return state;
+  }
+
+  return null;
+}
+
 function activityImageUrl(activity: LanyardActivity, data: LanyardData): string | null {
   const large = activity.assets?.large_image;
   if (!large) {
@@ -706,9 +754,33 @@ function applyDiscordPresence(data: LanyardData): void {
   const cards: string[] = [];
 
   for (const activity of data.activities) {
-    if (activity.type === 4 || activity.name.toLowerCase() === 'spotify') {
+    if (activity.name.toLowerCase() === 'spotify') {
       continue;
     }
+
+    if (isCustomStatusActivity(activity)) {
+      const statusText = customStatusText(activity);
+      if (!statusText) {
+        continue;
+      }
+
+      const emojiUrl = customStatusEmojiUrl(activity);
+      const emoji = normalizedActivityEmoji(activity);
+
+      cards.push(`
+        <article class="status-card">
+          <div class="status-card-icon ${emojiUrl ? 'status-card-image-wrap' : ''}" aria-hidden="true">
+            ${emojiUrl ? `<img class="status-card-image" src="${escapeHtml(emojiUrl)}" alt="" />` : escapeHtml(emoji ?? '✨')}
+          </div>
+          <div class="status-card-body">
+            <p class="hero-status-line status-card-label">Status</p>
+            <p class="hero-status-line status-card-title">${escapeHtml(statusText)}</p>
+          </div>
+        </article>
+      `);
+      continue;
+    }
+
     const title = activity.details ?? activity.name;
     const subtitle = activity.state ?? activity.name;
     const extra = embedDetails(activity, title, subtitle);
