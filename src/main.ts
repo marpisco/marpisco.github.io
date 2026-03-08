@@ -71,7 +71,10 @@ const techStack = [
   'PHP',
   '.NET Framework',
   'HTML/CSS',
-  'JavaScript/TypeScript',
+  'Bootstrap',
+  'Arduino IDE',
+  'ERP Implementations',
+  'ERP Software',
   'SQL',
   'MySQL',
   'PostgreSQL',
@@ -86,6 +89,8 @@ const techStack = [
   'Headscale',
   'Cloudflare',
   'Authentik',
+  'IIS',
+  'C++'
 ];
 
 const experience: Experience[] = [
@@ -95,6 +100,30 @@ const experience: Experience[] = [
     company: 'Quantinfor - Consultoria Informatica',
     summary: 'Internship role focused on software development in a hybrid setup in Malveira.',
     tags: ['Git', '.NET Framework', 'C#', 'Python', 'Software Prototyping'],
+  },
+  {
+    years: 'Apr 2025 - Jun 2025',
+    role: 'Software Developer (Internship)',
+    company: 'Visao Logica - Comercio Artigos de Informatica, Lda.',
+    summary:
+    'Worked on Primavera WebAPI and PEX Advanced extensibility (C# and Python), built middleware for WebAPI integrations, developed SIP/PBX and internal tooling concepts, configured Sophos Firewall, and implemented Primavera ERP synchronization flows.',
+    tags: ['C#', 'Python', 'PHP', 'SIP', 'PBX', 'Primavera ERP', 'Sophos Firewall'],
+  },
+  {
+    years: '2025 - Present',
+    role: 'Chief Information Security Officer',
+    company: 'LunarLabs LLC',
+    summary:
+    'Lead enterprise security strategy and infrastructure governance, hardening production systems and enforcing resilient, policy-driven IT operations.',
+    tags: ['Proxmox', 'Linux', 'Authentik', 'Cloudflare', 'Docker', 'Security Operations'],
+  },
+  {
+    years: '2025 - Present',
+    role: 'System Administrator',
+    company: 'Darkless LTD',
+    summary:
+    'Management of hosting systems, administration of the Microsoft 365 tenant, and direct customer support across operational and service issues.',
+    tags: ['Proxmox', 'Microsoft 365', 'Linux', 'Docker'],
   },
   {
     years: '2024 - 2025',
@@ -111,31 +140,7 @@ const experience: Experience[] = [
     summary:
       'Volunteered in a program funded by the Portuguese Ministry of Education and E-Redes where students taught parents foundational digital literacy skills.',
     tags: ['Volunteer', 'Digital Literacy', 'Community'],
-  },
-  {
-    years: 'Apr 2025 - Jun 2025',
-    role: 'Software Developer (Internship)',
-    company: 'Visao Logica - Comercio Artigos de Informatica, Lda.',
-    summary:
-      'Worked on Primavera WebAPI and PEX Advanced extensibility (C# and Python), built middleware for WebAPI integrations, developed SIP/PBX and internal tooling concepts, configured Sophos Firewall, and implemented Primavera ERP synchronization flows.',
-    tags: ['C#', 'Python', 'PHP', 'SIP', 'PBX', 'Primavera ERP', 'Sophos Firewall'],
-  },
-  {
-    years: '2025 - Present',
-    role: 'Chief Information Security Officer',
-    company: 'LunarLabs LLC',
-    summary:
-      'Lead enterprise security strategy and infrastructure governance, hardening production systems and enforcing resilient, policy-driven IT operations.',
-    tags: ['Proxmox', 'Linux', 'Authentik', 'Cloudflare', 'Docker', 'Security Operations'],
-  },
-  {
-    years: '2025 - Present',
-    role: 'System Administrator',
-    company: 'Darkless LTD',
-    summary:
-      'Management of hosting systems, administration of the Microsoft 365 tenant, and direct customer support across operational and service issues.',
-    tags: ['Proxmox', 'Microsoft 365', 'Linux', 'Docker'],
-  },
+  }
 ];
 
 const education: Education[] = [
