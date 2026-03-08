@@ -118,12 +118,28 @@ const experience: Experience[] = [
     tags: ['Git', '.NET Framework', 'C#', 'Python', 'Software Prototyping'],
   },
   {
-    years: 'Apr 2025 - Aug 2025',
+    years: '2024 - 2025',
+    role: 'Infrastructure Engineer',
+    company: 'Scala Studios',
+    summary:
+      'Managed game server deployments and a dedicated hypervisor; operated internal developer services including TeamCity, YouTrack, Jenkins, and Mailcow; built an intranet over Headscale VPN; and supported Scala project tickets.',
+    tags: ['Linux', 'Proxmox', 'TeamCity', 'YouTrack', 'Jenkins', 'Mailcow', 'Headscale'],
+  },
+  {
+    years: 'Apr 2023',
+    role: 'Volunteer',
+    company: 'Academia Digital para Pais',
+    summary:
+      'Volunteered in a program funded by the Portuguese Ministry of Education and E-Redes where students taught parents foundational digital literacy skills.',
+    tags: ['Volunteer', 'Digital Literacy', 'Community'],
+  },
+  {
+    years: 'Apr 2025 - Jun 2025',
     role: 'Software Developer (Internship)',
     company: 'Visao Logica - Comercio Artigos de Informatica, Lda.',
     summary:
-      'Developed with C# and Python, created SIP protocol demos, prepared customer computers and software, and built Primavera ERP extensions/forms.',
-    tags: ['C#', 'Python', 'SIP', 'Primavera ERP', 'On-site'],
+      'Worked on Primavera WebAPI and PEX Advanced extensibility (C# and Python), built middleware for WebAPI integrations, developed SIP/PBX and internal tooling concepts, configured Sophos Firewall, and implemented Primavera ERP synchronization flows.',
+    tags: ['C#', 'Python', 'PHP', 'SIP', 'PBX', 'Primavera ERP', 'Sophos Firewall'],
   },
   {
     years: '2025 - Present',
