@@ -109,30 +109,30 @@ const experience: Experience[] = [
     'Worked on Primavera WebAPI and PEX Advanced extensibility (C# and Python), built middleware for WebAPI integrations, developed SIP/PBX and internal tooling concepts, configured Sophos Firewall, and implemented Primavera ERP synchronization flows.',
     tags: ['C#', 'Python', 'PHP', 'SIP', 'PBX', 'Primavera ERP', 'Sophos Firewall'],
   },
-  {
-    years: '2025 - Present',
-    role: 'Chief Information Security Officer',
-    company: 'LunarLabs LLC',
-    summary:
-    'Lead enterprise security strategy and infrastructure governance, hardening production systems and enforcing resilient, policy-driven IT operations.',
-    tags: ['Proxmox', 'Linux', 'Authentik', 'Cloudflare', 'Docker', 'Security Operations'],
-  },
-  {
-    years: '2025 - Present',
-    role: 'System Administrator',
-    company: 'Darkless LTD',
-    summary:
-    'Management of hosting systems, administration of the Microsoft 365 tenant, and direct customer support across operational and service issues.',
-    tags: ['Proxmox', 'Microsoft 365', 'Linux', 'Docker'],
-  },
-  {
-    years: '2024 - 2025',
-    role: 'Infrastructure Engineer',
-    company: 'Scala Studios',
-    summary:
-      'Managed game server deployments and a dedicated hypervisor; operated internal developer services including TeamCity, YouTrack, Jenkins, and Mailcow; built an intranet over Headscale VPN; and supported Scala project tickets.',
-    tags: ['Linux', 'Proxmox', 'TeamCity', 'YouTrack', 'Jenkins', 'Mailcow', 'Headscale'],
-  },
+  // {
+  //   years: '2025 - Present',
+  //   role: 'Chief Information Security Officer',
+  //   company: 'LunarLabs LLC',
+  //   summary:
+  //   'Lead enterprise security strategy and infrastructure governance, hardening production systems and enforcing resilient, policy-driven IT operations.',
+  //   tags: ['Proxmox', 'Linux', 'Authentik', 'Cloudflare', 'Docker', 'Security Operations'],
+  // },
+  // {
+  //   years: '2025 - Present',
+  //   role: 'System Administrator',
+  //   company: 'Darkless LTD',
+  //   summary:
+  //   'Management of hosting systems, administration of the Microsoft 365 tenant, and direct customer support across operational and service issues.',
+  //   tags: ['Proxmox', 'Microsoft 365', 'Linux', 'Docker'],
+  // },
+  // {
+  //   years: '2024 - 2025',
+  //   role: 'Infrastructure Engineer',
+  //   company: 'Scala Studios',
+  //   summary:
+  //     'Managed game server deployments and a dedicated hypervisor; operated internal developer services including TeamCity, YouTrack, Jenkins, and Mailcow; built an intranet over Headscale VPN; and supported Scala project tickets.',
+  //   tags: ['Linux', 'Proxmox', 'TeamCity', 'YouTrack', 'Jenkins', 'Mailcow', 'Headscale'],
+  // },
   {
     years: 'Apr 2023',
     role: 'Volunteer',
