@@ -802,6 +802,17 @@ footer {
     animation: none !important;
     transition: none !important;
   }
+
+  .reveal-text,
+  .reveal-block {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .avatar {
+    opacity: 1 !important;
+  }
 }
 
 @media (max-width: 980px) {
