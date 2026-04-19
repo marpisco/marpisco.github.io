@@ -95,7 +95,7 @@ const techStack = [
 
 const experience: Experience[] = [
   {
-    years: 'Jan 2026 - Present',
+    years: 'Jan 2026 - Apr 2026',
     role: 'Software Developer (Internship)',
     company: 'Quantinfor - Consultoria Informatica',
     summary: 'Internship role focused on software development in a hybrid setup in Malveira.',
@@ -136,7 +136,7 @@ const experience: Experience[] = [
   {
     years: 'Apr 2023',
     role: 'Volunteer',
-    company: 'Academia Digital para Pais',
+    company: 'Academia Digital para Pais - AEJICS',
     summary:
       'Volunteered in a program funded by the Portuguese Ministry of Education and E-Redes where students taught parents foundational digital literacy skills.',
     tags: ['Volunteer', 'Digital Literacy', 'Community'],
