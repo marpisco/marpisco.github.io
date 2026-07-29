@@ -648,29 +648,6 @@ h2 {
   fill: currentColor;
 }
 
-.discord-btn::before {
-  content: "itsneverland.";
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  padding: 0.17rem 0.42rem;
-  font-size: 0.68rem;
-  color: #f9f5e8;
-  background: rgba(15, 16, 22, 0.97);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 6px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 150ms ease, transform 150ms ease;
-}
-
-.discord-btn:hover::before {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
 footer {
   margin: 0.75rem 0 1.2rem;
 }
