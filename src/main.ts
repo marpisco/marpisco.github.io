@@ -145,7 +145,7 @@ const experience: Experience[] = [
 
 const education: Education[] = [
   {
-    years: 'Sep 2023 - Jun 2026',
+    years: 'Sep 2023 - Jul 2026',
     school: 'Agrupamento de Escolas Joaquim Inacio da Cruz Sobral',
     program: 'Professional Course, IT Systems',
     summary:
@@ -216,8 +216,6 @@ app.innerHTML = `
           Hi, I am <span class="gradient-name">Marco Pisco</span>.
         </h1>
         <p class="hero-alias">
-          <span>aka <span class="alias-name" data-tip="nvld">neverland</span></span>
-          <span class="alias-divider" aria-hidden="true"></span>
           <span
             id="discord-presence-badge"
             class="alias-status offline"
@@ -228,7 +226,7 @@ app.innerHTML = `
           </span>
         </p>
         <p class="hero-subtitle">
-          Student, Developer and System Administrator based in
+          Developer and System Administrator based in
           <span class="location-inline">
             Portugal
             <img class="inline-flag" src="/images/portugal-flag.svg" alt="Portugal flag" />
@@ -248,7 +246,7 @@ app.innerHTML = `
         <h2>About Me</h2>
         <div class="section-content">
           <p>
-            I am a student, software developer, and system administrator focused on
+            I am a software developer and system administrator focused on
             secure infrastructure, practical product delivery, and dependable operations.
           </p>
           <p>
