@@ -13,7 +13,6 @@
 
 ## Constraints
 - Do not break existing sections: Home, About, Skills, Experience, Education, Posts, Contact
-- Keep Discord presence integration working (Lanyard websocket flow in `src/main.ts`)
 - Keep posts loading from `public/writeups/index.json`
 - Avoid changing deployment workflow unless explicitly requested
 - Create a git commit after completing each requested change

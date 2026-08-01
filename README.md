@@ -12,12 +12,10 @@ Personal website source for [marcopisco.com](https://marcopisco.com), built with
 - Vite
 - Vanilla HTML/CSS
 - GitHub Actions + GitHub Pages
-- Lanyard WebSocket API (Discord live presence)
 
 ## Features
 
 - Single-page portfolio layout (hero, about, tech stack, experience, education, contact)
-- Live Discord presence cards using Lanyard WebSocket
 - Posts section backed by local Markdown files
 - Smooth reveal and hover animations
 - Responsive layout for desktop and mobile

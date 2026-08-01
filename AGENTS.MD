@@ -21,14 +21,13 @@
 ## Editing guidelines
 - Make focused, minimal diffs
 - Keep website responsive on desktop/mobile
-- Preserve existing Discord presence + writeups/posts behavior unless asked to change it
+- Preserve existing writeups/posts behavior unless asked to change it
 - Prefer updating source files in `src/` and `public/`, not generated output in `dist/`
 - Create a git commit after completing each requested change
 
 ## Content
 - Use `Marco Pisco` as the name without aliases
 - Do not describe Marco as a student; the professional IT Systems course finished in July 2026
-- Keep the Discord live status, but do not display a Discord username or former alias
 
 ## Posts workflow
 - Posts live in `public/writeups/` and need no application code changes

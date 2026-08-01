@@ -24,46 +24,6 @@ type WriteupMeta = {
   tags: string[];
 };
 
-type LanyardActivity = {
-  type: number;
-  name: string;
-  application_id?: string;
-  details?: string;
-  state?: string;
-  assets?: {
-    large_image?: string;
-    large_text?: string;
-    small_image?: string;
-    small_text?: string;
-  };
-  emoji?: {
-    name: string;
-    id?: string;
-    animated?: boolean;
-  };
-};
-
-type LanyardData = {
-  discord_status: 'online' | 'idle' | 'dnd' | 'offline';
-  active_on_discord_web?: boolean;
-  active_on_discord_desktop?: boolean;
-  active_on_discord_mobile?: boolean;
-  listening_to_spotify: boolean;
-  spotify?: {
-    album?: string;
-    album_art_url?: string;
-    song: string;
-    artist: string;
-  };
-  activities: LanyardActivity[];
-};
-
-type LanyardSocketMessage = {
-  op: number;
-  t?: string;
-  d?: unknown;
-};
-
 const techStack = [
   'Git',
   'C#',
@@ -215,16 +175,6 @@ app.innerHTML = `
         <h1>
           Hi, I am <span class="gradient-name">Marco Pisco</span>.
         </h1>
-        <p class="hero-alias">
-          <span
-            id="discord-presence-badge"
-            class="alias-status offline"
-            data-tip="According to Discord."
-          >
-            <span class="presence-dot" aria-hidden="true"></span>
-            <span id="discord-presence-text" class="alias-status-text">Currently Offline</span>
-          </span>
-        </p>
         <p class="hero-subtitle">
           Developer and System Administrator based in
           <span class="location-inline">
@@ -232,7 +182,6 @@ app.innerHTML = `
             <img class="inline-flag" src="/images/portugal-flag.svg" alt="Portugal flag" />
           </span>.
         </p>
-        <div id="hero-status" class="hero-status hidden"></div>
       </div>
       <aside class="hero-media">
         <div class="avatar-frame">
@@ -330,12 +279,6 @@ app.innerHTML = `
             <path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm0 2v.5l9 6 9-6V7H3zm18 10V9.7l-8.4 5.6a1 1 0 0 1-1.2 0L3 9.7V17h18z" />
           </svg>
           Email
-        </a>
-        <a class="social-btn discord-btn" href="https://discord.com/users/1060304285457448970" target="_blank" rel="noreferrer" aria-label="Discord">
-          <svg viewBox="0 0 24 24" class="social-icon" aria-hidden="true">
-            <path d="M20.3 4.4A16.5 16.5 0 0 0 16.2 3c-.2.4-.5 1-.6 1.4a15 15 0 0 0-7.1 0c-.2-.4-.4-1-.6-1.4A16.4 16.4 0 0 0 3.7 4.4C1 8.4.3 12.2.7 16c1.8 1.3 3.5 2.1 5.2 2.6.4-.6.7-1.2 1-1.9-.6-.2-1.1-.5-1.6-.8l.4-.3c3.1 1.4 6.5 1.4 9.5 0l.4.3c-.5.3-1 .6-1.6.8.3.7.6 1.3 1 1.9 1.7-.5 3.4-1.3 5.2-2.6.5-4.5-.9-8.3-3.9-11.6zM9.6 13.7c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2zm4.8 0c-1 0-1.8-.9-1.8-2s.8-2 1.8-2 1.8.9 1.8 2-.8 2-1.8 2z" />
-          </svg>
-          Discord
         </a>
         <a class="social-btn" href="https://www.linkedin.com/in/marco-p-440068329/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
           <svg viewBox="0 0 24 24" class="social-icon" aria-hidden="true">
@@ -515,7 +458,7 @@ function setupScrollReveal(root: ParentNode = document): void {
   );
   const blockTargets = Array.from(
     root.querySelectorAll<HTMLElement>(
-      '.hero-panel, .about-panel, .skills-panel, .section-panel, .contact-panel, .hero-media, .avatar-frame, .hero-status .status-card, .contact-actions, .writeup-viewer',
+      '.hero-panel, .about-panel, .skills-panel, .section-panel, .contact-panel, .hero-media, .avatar-frame, .contact-actions, .writeup-viewer',
     ),
   );
   const targets = Array.from(new Set([...textTargets, ...blockTargets]));
@@ -601,279 +544,6 @@ function setupNameGradientTrack(): void {
   });
 }
 
-function statusLabel(status: LanyardData['discord_status']): string {
-  if (status === 'online') {
-    return 'Online';
-  }
-  if (status === 'idle') {
-    return 'Idle';
-  }
-  if (status === 'dnd') {
-    return 'Do Not Disturb';
-  }
-  return 'Offline';
-}
-
-function statusSentence(status: LanyardData['discord_status']): string {
-  if (status === 'dnd') {
-    return 'Currently in Do Not Disturb';
-  }
-  return `Currently ${statusLabel(status)}`;
-}
-
-function activityIcon(activity: LanyardActivity): string {
-  const name = activity.name.toLowerCase();
-  if (name.includes('visual studio code')) {
-    return '💻';
-  }
-  if (name.includes('spotify')) {
-    return '🎵';
-  }
-  if (activity.type === 0) {
-    return '🎮';
-  }
-  if (activity.type === 2) {
-    return '🎧';
-  }
-  return '✨';
-}
-
-function customStatusEmojiUrl(activity: LanyardActivity): string | null {
-  if (!activity.emoji?.id) {
-    return null;
-  }
-
-  const extension = activity.emoji.animated ? 'gif' : 'webp';
-  return `https://cdn.discordapp.com/emojis/${activity.emoji.id}.${extension}?size=96&quality=lossless`;
-}
-
-function normalizedActivityEmoji(activity: LanyardActivity): string | null {
-  const raw = activity.emoji?.name?.trim();
-  if (!raw) {
-    return null;
-  }
-
-  if (/\p{Extended_Pictographic}/u.test(raw)) {
-    return raw;
-  }
-
-  if (/[ÃÂÐâð]/u.test(raw)) {
-    return null;
-  }
-
-  return raw;
-}
-
-function isCustomStatusActivity(activity: LanyardActivity): boolean {
-  const name = activity.name.trim().toLowerCase();
-  const state = activity.state?.trim().toLowerCase();
-  return activity.type === 4 || name === 'hang status' || Boolean(state?.startsWith('custom:'));
-}
-
-function customStatusText(activity: LanyardActivity): string | null {
-  const details = activity.details?.trim();
-  if (details) {
-    return details;
-  }
-
-  const state = activity.state?.trim();
-  if (state && !state.toLowerCase().startsWith('custom:')) {
-    return state;
-  }
-
-  return null;
-}
-
-function activityImageUrl(activity: LanyardActivity, data: LanyardData): string | null {
-  const large = activity.assets?.large_image;
-  if (!large) {
-    return null;
-  }
-
-  if (large.startsWith('spotify:') && data.spotify?.album_art_url) {
-    return data.spotify.album_art_url;
-  }
-
-  if (large.startsWith('mp:')) {
-    const path = large.slice(3);
-    if (path.startsWith('http://') || path.startsWith('https://')) {
-      return path;
-    }
-    return `https://media.discordapp.net/${path}`;
-  }
-
-  if (activity.application_id) {
-    return `https://cdn.discordapp.com/app-assets/${activity.application_id}/${large}.png`;
-  }
-
-  return null;
-}
-
-function normalizeMeta(value: string): string {
-  return value.trim().toLowerCase();
-}
-
-function embedDetails(activity: LanyardActivity, title: string, subtitle: string): string {
-  const details: string[] = [];
-  const titleKey = normalizeMeta(title);
-  const subtitleKey = normalizeMeta(subtitle);
-
-  if (activity.assets?.large_text) {
-    const large = activity.assets.large_text.trim();
-    const largeKey = normalizeMeta(large);
-    if (largeKey !== titleKey && largeKey !== subtitleKey) {
-      details.push(large);
-    }
-  }
-  if (activity.assets?.small_text) {
-    const small = activity.assets.small_text.trim();
-    const smallKey = normalizeMeta(small);
-    if (smallKey !== titleKey && smallKey !== subtitleKey) {
-      details.push(small);
-    }
-  }
-  return details.join(' • ');
-}
-
-function applyDiscordPresence(data: LanyardData): void {
-  const badge = document.querySelector<HTMLElement>('#discord-presence-badge');
-  const badgeText = document.querySelector<HTMLElement>('#discord-presence-text');
-  const heroStatus = document.querySelector<HTMLElement>('#hero-status');
-  if (!heroStatus) {
-    return;
-  }
-
-  if (badge && badgeText) {
-    badge.className = `alias-status ${data.discord_status}`;
-    badgeText.textContent = statusSentence(data.discord_status);
-    badge.setAttribute('aria-label', `Discord status: ${statusLabel(data.discord_status)}`);
-  }
-
-  const cards: string[] = [];
-
-  for (const activity of data.activities) {
-    if (activity.name.toLowerCase() === 'spotify') {
-      continue;
-    }
-
-    if (isCustomStatusActivity(activity)) {
-      const statusText = customStatusText(activity);
-      if (!statusText) {
-        continue;
-      }
-
-      const emojiUrl = customStatusEmojiUrl(activity);
-      const emoji = normalizedActivityEmoji(activity);
-
-      cards.push(`
-        <article class="status-card">
-          <div class="status-card-icon ${emojiUrl ? 'status-card-image-wrap' : ''}" aria-hidden="true">
-            ${emojiUrl ? `<img class="status-card-image" src="${escapeHtml(emojiUrl)}" alt="" />` : escapeHtml(emoji ?? '✨')}
-          </div>
-          <div class="status-card-body">
-            <p class="hero-status-line status-card-label">Voicechannel Status</p>
-            <p class="hero-status-line status-card-title">${escapeHtml(statusText)}</p>
-          </div>
-        </article>
-      `);
-      continue;
-    }
-
-    const title = activity.details ?? activity.name;
-    const subtitle = activity.state ?? activity.name;
-    const extra = embedDetails(activity, title, subtitle);
-    const image = activityImageUrl(activity, data);
-    cards.push(`
-      <article class="status-card">
-        <div class="status-card-icon ${image ? 'status-card-image-wrap' : ''}" aria-hidden="true">
-          ${
-            image
-              ? `<img class="status-card-image" src="${escapeHtml(image)}" alt="" />`
-              : activityIcon(activity)
-          }
-        </div>
-        <div class="status-card-body">
-          <p class="hero-status-line status-card-title">${escapeHtml(title)}</p>
-          <p class="hero-status-line status-card-sub">${escapeHtml(subtitle)}</p>
-          ${extra ? `<p class="hero-status-line status-card-meta">${escapeHtml(extra)}</p>` : ''}
-        </div>
-      </article>
-    `);
-  }
-
-  if (data.listening_to_spotify && data.spotify) {
-    cards.push(`
-      <article class="status-card">
-        <div class="status-card-icon status-card-image-wrap" aria-hidden="true">
-          <img class="status-card-image" src="${escapeHtml(data.spotify.album_art_url ?? '')}" alt="" />
-        </div>
-        <div class="status-card-body">
-          <p class="hero-status-line status-card-label">Spotify</p>
-          <p class="hero-status-line status-card-title">${escapeHtml(data.spotify.song)}</p>
-          <p class="hero-status-line status-card-sub">${escapeHtml(data.spotify.artist)}</p>
-        </div>
-      </article>
-    `);
-  }
-
-  if (cards.length === 0) {
-    heroStatus.classList.add('hidden');
-    heroStatus.innerHTML = '';
-    return;
-  }
-
-  heroStatus.classList.remove('hidden');
-  heroStatus.innerHTML = cards.join('');
-}
-
-function connectLanyardWebSocket(): void {
-  const socket = new WebSocket('wss://api.lanyard.rest/socket');
-  let heartbeatId: ReturnType<typeof setInterval> | null = null;
-
-  socket.addEventListener('message', (event) => {
-    const payload = JSON.parse(event.data) as LanyardSocketMessage;
-
-    if (payload.op === 1 && payload.d && typeof payload.d === 'object' && 'heartbeat_interval' in payload.d) {
-      const interval = Number((payload.d as { heartbeat_interval: number }).heartbeat_interval);
-
-      if (heartbeatId) {
-        clearInterval(heartbeatId);
-      }
-      heartbeatId = setInterval(() => {
-        socket.send(JSON.stringify({ op: 3 }));
-      }, interval);
-
-      socket.send(
-        JSON.stringify({
-          op: 2,
-          d: {
-            subscribe_to_id: '1060304285457448970',
-          },
-        }),
-      );
-      return;
-    }
-
-    if (payload.op === 0 && payload.d && typeof payload.d === 'object') {
-      const data = payload.d as Partial<LanyardData>;
-      if (typeof data.discord_status === 'string' && Array.isArray(data.activities)) {
-        applyDiscordPresence(data as LanyardData);
-      }
-    }
-  });
-
-  socket.addEventListener('close', () => {
-    if (heartbeatId) {
-      clearInterval(heartbeatId);
-    }
-    setTimeout(connectLanyardWebSocket, 3000);
-  });
-
-  socket.addEventListener('error', () => {
-    socket.close();
-  });
-}
-
 async function loadWriteups(): Promise<void> {
   const list = document.querySelector<HTMLElement>('#writeups-list');
   if (!list) {
@@ -934,5 +604,4 @@ async function loadWriteups(): Promise<void> {
 
 setupScrollReveal();
 setupNameGradientTrack();
-connectLanyardWebSocket();
 void loadWriteups();
