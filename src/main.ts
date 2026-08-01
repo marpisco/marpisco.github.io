@@ -515,7 +515,8 @@ function renderWriteup(writeup: WriteupMeta): void {
         <div class="tags">${writeup.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}</div>
         <div class="writeup-content">${markdownToHtml(markdown)}</div>
       `;
-      viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      viewer.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     })
     .catch(() => {
       viewer.innerHTML = '<p class="summary">Failed to load this writeup file.</p>';
@@ -684,8 +685,10 @@ async function loadWriteups(): Promise<void> {
 
     const cards = list.querySelectorAll<HTMLElement>('.writeup-card');
     for (const card of cards) {
-      card.style.cursor = 'pointer';
-      card.addEventListener('click', () => {
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+
+      const toggleWriteup = (): void => {
         const slug = card.dataset.slug;
         if (slug && slug === openSlug) {
           closeWriteup();
@@ -696,6 +699,14 @@ async function loadWriteups(): Promise<void> {
         if (writeup) {
           renderWriteup(writeup);
           openSlug = writeup.slug;
+        }
+      };
+
+      card.addEventListener('click', toggleWriteup);
+      card.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggleWriteup();
         }
       });
     }
