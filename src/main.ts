@@ -6,6 +6,12 @@ import {
   THEME_STORAGE_KEY,
   type ThemePreference,
 } from './theme';
+import {
+  HERO_MESSAGES,
+  INITIAL_TYPING_STATE,
+  nextTypingState,
+  type TypingState,
+} from './typing';
 
 type Experience = {
   years: string;
@@ -30,12 +36,6 @@ type WriteupMeta = {
   summary: string;
   tags: string[];
 };
-
-const repositorySourceUrl = 'https://github.com/marpisco/marpisco.github.io/blob/main';
-
-function sourceFileUrl(path: string): string {
-  return `${repositorySourceUrl}/${path}`;
-}
 
 const techStack = [
   'Git',
@@ -203,11 +203,13 @@ app.innerHTML = `
             Hi, I am <strong>Marco Pisco</strong>.
           </h1>
           <p class="hero-subtitle">
-            <strong>Developer and System Administrator</strong> based in
-            <span class="location-inline">
-              Portugal
-              <img class="inline-flag" src="/images/portugal-flag.svg" alt="Portugal flag" />
-            </span>.
+            <span class="typed-declaration" aria-hidden="true">
+              <span class="typed-keyword">const</span>
+              <span class="typed-variable">subtitle</span>
+              <span class="typed-operator"> = </span>
+              <span class="typed-string">&quot;<span id="typed-subtitle"></span><span class="typing-cursor"></span>&quot;</span>;
+            </span>
+            <span class="sr-only">${HERO_MESSAGES[0]}</span>
           </p>
           <div class="hero-actions">
             <a class="code-button primary" href="#experience">View experience <span>→</span></a>
@@ -235,48 +237,16 @@ app.innerHTML = `
         <span class="file-tab">workspace</span>
       </div>
       <div class="workspace-layout">
-        <aside class="repository-explorer" aria-label="Repository Explorer">
+        <aside class="repository-explorer" aria-label="Portfolio Explorer">
           <p class="explorer-heading">Explorer</p>
-          <p class="explorer-root">MARCOPISCO.GITHUB.IO</p>
+          <p class="explorer-root">MARCOPISCO.COM</p>
           <ul class="repository-tree">
-            <li>
-              <span class="tree-folder">.github</span>
-              <ul>
-                <li>
-                  <span class="tree-folder">workflows</span>
-                  <ul>
-                    <li><a class="tree-file yaml" href="${sourceFileUrl('.github/workflows/deploy-pages.yml')}" target="_blank" rel="noreferrer">deploy-pages.yml</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <span class="tree-folder">public</span>
-              <ul>
-                <li>
-                  <span class="tree-folder">images</span>
-                  <ul>
-                    <li><a class="tree-file image" href="/images/marco-profile.png" target="_blank" rel="noreferrer">marco-profile.png</a></li>
-                    <li><a class="tree-file image" href="/images/portugal-flag.svg" target="_blank" rel="noreferrer">portugal-flag.svg</a></li>
-                  </ul>
-                </li>
-                <li>
-                  <span class="tree-folder">writeups</span>
-                  <ul>
-                    <li><a class="tree-file json" href="/writeups/index.json" target="_blank" rel="noreferrer">index.json</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <span class="tree-folder">src</span>
-              <ul>
-                <li><a class="tree-file typescript" href="${sourceFileUrl('src/main.ts')}" target="_blank" rel="noreferrer">main.ts</a></li>
-                <li><a class="tree-file css" href="${sourceFileUrl('src/styles.css')}" target="_blank" rel="noreferrer">styles.css</a></li>
-              </ul>
-            </li>
-            <li><a class="tree-file" href="${sourceFileUrl('CNAME')}" target="_blank" rel="noreferrer">CNAME</a></li>
-            <li><a class="tree-file markdown" href="${sourceFileUrl('README.md')}" target="_blank" rel="noreferrer">README.md</a></li>
+            <li><a class="tree-file typescript" href="#about">about.ts</a></li>
+            <li><a class="tree-file json" href="#skills">stack.json</a></li>
+            <li><a class="tree-file typescript" href="#experience">experience.ts</a></li>
+            <li><a class="tree-file markdown" href="#education">education.md</a></li>
+            <li><a class="tree-file folder" href="#writeups">writeups/</a></li>
+            <li><a class="tree-file typescript" href="#contact">contact.ts</a></li>
           </ul>
         </aside>
 
@@ -596,6 +566,52 @@ function setupScrollReveal(root: ParentNode = document): void {
   }
 }
 
+function setupTypingSubtitle(): void {
+  const subtitle = document.querySelector<HTMLElement>('#typed-subtitle');
+  const cursor = document.querySelector<HTMLElement>('.typing-cursor');
+  if (!subtitle || !cursor) {
+    return;
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) {
+    subtitle.textContent = HERO_MESSAGES[0];
+    cursor.classList.add('is-hidden');
+    return;
+  }
+
+  const typingDelay = 48;
+  const deletingDelay = 28;
+  const messageHold = 1600;
+  const messageGap = 350;
+  let state: TypingState = { ...INITIAL_TYPING_STATE };
+
+  const render = (): void => {
+    const message = HERO_MESSAGES[state.messageIndex];
+    subtitle.textContent = message.slice(0, state.visibleCharacters);
+  };
+
+  const scheduleNextCharacter = (): void => {
+    const message = HERO_MESSAGES[state.messageIndex];
+    let delay = state.direction === 'typing' ? typingDelay : deletingDelay;
+
+    if (state.direction === 'typing' && state.visibleCharacters >= message.length) {
+      delay = messageHold;
+    } else if (state.direction === 'deleting' && state.visibleCharacters === 0) {
+      delay = messageGap;
+    }
+
+    window.setTimeout(() => {
+      state = nextTypingState(state, HERO_MESSAGES);
+      render();
+      scheduleNextCharacter();
+    }, delay);
+  };
+
+  render();
+  scheduleNextCharacter();
+}
+
 function setupThemeControl(): void {
   const button = document.querySelector<HTMLButtonElement>('#theme-toggle');
   const label = document.querySelector<HTMLElement>('#theme-label');
@@ -718,6 +734,7 @@ async function loadWriteups(): Promise<void> {
   }
 }
 
+setupTypingSubtitle();
 setupThemeControl();
 setupScrollReveal();
 void loadWriteups();
