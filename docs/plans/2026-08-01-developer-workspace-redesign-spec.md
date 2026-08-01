@@ -47,39 +47,43 @@ be equally intentional in light and dark mode.
 
 ### Hero
 
-- Keep Marco Pisco's name, role, location, Portuguese flag, and profile image.
+- Keep Marco Pisco's name, role, location, and profile image.
 - Present the name and role with restrained TypeScript-inspired syntax.
+- Render the subtitle as an IDE-style declaration whose string is typed,
+  held, erased, and replaced in a continuous cycle.
+- Start the cycle with the existing sentence exactly as written, followed by
+  three lines derived from the existing portfolio copy:
+
+```text
+Developer and System Administrator based in Portugal.
+Building secure infrastructure and reliable platforms.
+Automating systems for dependable operations.
+Delivering practical software from code to production.
+```
+
+- Keep the first subtitle visible as static text for screen readers and when
+  reduced motion is requested.
 - Keep clear actions for Experience and Contact.
 - Do not introduce invented availability, employment, or project claims.
 
 ### Explorer
 
-Use real paths from this repository instead of invented portfolio files. The
-desktop Explorer should show a compact subset of the actual tree:
+Use the mockup's content-oriented file labels as direct navigation to the real
+portfolio sections. The desktop Explorer should show:
 
 ```text
-MARCOPISCO.GITHUB.IO
-├── .github/
-│   └── workflows/
-│       └── deploy-pages.yml
-├── public/
-│   ├── images/
-│   │   ├── marco-profile.png
-│   │   └── portugal-flag.svg
-│   └── writeups/
-│       └── index.json
-├── src/
-│   ├── main.ts
-│   └── styles.css
-├── CNAME
-└── README.md
+MARCOPISCO.COM
+├── about.ts
+├── stack.json
+├── experience.ts
+├── education.md
+├── writeups/
+└── contact.ts
 ```
 
-- File and folder labels must match real repository names.
-- Folder rows are static context. Source and configuration file rows open their
-  matching `github.com/marpisco/marpisco.github.io/blob/main/...` page in a new
-  tab. Public image and writeup rows open their matching same-origin asset in a
-  new tab.
+- Each entry links to its matching section on the current page.
+- The labels describe Marco's portfolio content rather than the implementation
+  repository.
 - The Explorer is secondary context, not the only site navigation.
 - Hide the Explorer on smaller screens instead of introducing a complex drawer.
 
@@ -114,7 +118,9 @@ MARCOPISCO.GITHUB.IO
 
 - Keep TypeScript, Vite, and vanilla CSS.
 - Do not add dependencies.
-- Update `src/main.ts` and `src/styles.css`; reuse current assets in `public/`.
+- Update `src/main.ts` and `src/styles.css`, and keep the subtitle state in one
+  small testable TypeScript module.
+- Remove `public/images/portugal-flag.svg`; the redesigned page does not use it.
 - Keep the GitHub Pages workflow, CNAME, and writeups data format unchanged.
 - Avoid unrelated content edits or application refactors.
 
@@ -135,8 +141,11 @@ MARCOPISCO.GITHUB.IO
 - Verify the page in the in-app browser at desktop and mobile widths.
 - Verify System, Dark, and Light theme modes.
 - Verify system theme changes are followed while System mode is active.
+- Verify the subtitle types, holds, erases, advances through all four messages,
+  and remains static when reduced motion is requested.
 - Verify all section navigation and contact links.
 - Verify empty writeups and at least one representative Markdown post flow.
+- Confirm the removed Portugal flag asset is no longer shipped.
 - Confirm the production code contains no Discord or Lanyard references.
 
 ## Non-Goals
