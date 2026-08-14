@@ -17,6 +17,7 @@ type Experience = {
   years: string;
   role: string;
   company: string;
+  location?: string;
   summary: string;
   tags: string[];
 };
@@ -68,10 +69,46 @@ const techStack = [
 
 const experience: Experience[] = [
   {
+    years: 'Jul 2026 - Present',
+    role: 'Developer',
+    company: 'Quantinfor - Consultoria Informática',
+    location: 'Malveira · Hybrid',
+    summary:
+      'Software development for multiple environments, including PHC Web and Primavera ERP. Maintenance and creation of software projects, internal tools, and platforms using repository history tracking, such as Git.',
+    tags: ['Informatics', 'Software Prototyping', 'Git', 'PHC Web', 'Primavera ERP'],
+  },
+  {
+    years: 'Oct 2025 - Present',
+    role: 'Head of Systems / System Administrator',
+    company: 'LunarLabs LLC',
+    summary:
+      'Creating and maintaining company systems isolated within Proxmox containers, while maintaining and creating developer systems and platforms. Managing Microsoft 365 for single sign-on (SSO) environments.',
+    tags: ['Informatics', 'Docker', 'Proxmox', 'Microsoft 365', 'Single Sign-On'],
+  },
+  {
+    years: 'Aug 2025 - Present',
+    role: 'System Administrator and Operations Manager',
+    company: 'Darkless Ltd.',
+    location: 'Remote',
+    summary:
+      'Managing remote infrastructure, including hypervisors and client environments such as Pterodactyl Game Panel for Minecraft and Discord-related deployments. Handling support tickets, assisting with automations, and managing Office 365 for single sign-on (SSO).',
+    tags: ['Server Administration', 'Proxmox', 'Pterodactyl', 'Microsoft 365', 'Automation'],
+  },
+  {
+    years: 'Feb 2025 - Present',
+    role: 'Senior System Administrator',
+    company: 'Scala Studios',
+    location: 'Remote',
+    summary:
+      'Managed game server deployments and a dedicated hypervisor; operated internal developer services including TeamCity, YouTrack, Jenkins, and Mailcow; built an intranet over Headscale VPN; and supported Scala project tickets.',
+    tags: ['Infrastructure Management', 'Linux', 'Proxmox', 'TeamCity', 'YouTrack', 'Jenkins', 'Mailcow', 'Headscale'],
+  },
+  {
     years: 'Jan 2026 - Apr 2026',
-    role: 'Software Developer (Internship)',
-    company: 'Quantinfor - Consultoria Informatica',
-    summary: 'Internship role focused on software development in a hybrid setup in Malveira.',
+    role: 'Software Developer Intern',
+    company: 'Quantinfor - Consultoria Informática',
+    location: 'Malveira · Hybrid',
+    summary: 'Software development internship focused on multiple environments and internal platform tooling.',
     tags: ['Git', '.NET Framework', 'C#', 'Python', 'Software Prototyping'],
   },
   {
@@ -82,30 +119,6 @@ const experience: Experience[] = [
     'Worked on Primavera WebAPI and PEX Advanced extensibility (C# and Python), built middleware for WebAPI integrations, developed SIP/PBX and internal tooling concepts, configured Sophos Firewall, and implemented Primavera ERP synchronization flows.',
     tags: ['C#', 'Python', 'PHP', 'SIP', 'PBX', 'Primavera ERP', 'Sophos Firewall'],
   },
-  // {
-  //   years: '2025 - Present',
-  //   role: 'Chief Information Security Officer',
-  //   company: 'LunarLabs LLC',
-  //   summary:
-  //   'Lead enterprise security strategy and infrastructure governance, hardening production systems and enforcing resilient, policy-driven IT operations.',
-  //   tags: ['Proxmox', 'Linux', 'Authentik', 'Cloudflare', 'Docker', 'Security Operations'],
-  // },
-  // {
-  //   years: '2025 - Present',
-  //   role: 'System Administrator',
-  //   company: 'Darkless LTD',
-  //   summary:
-  //   'Management of hosting systems, administration of the Microsoft 365 tenant, and direct customer support across operational and service issues.',
-  //   tags: ['Proxmox', 'Microsoft 365', 'Linux', 'Docker'],
-  // },
-  // {
-  //   years: '2024 - 2025',
-  //   role: 'Infrastructure Engineer',
-  //   company: 'Scala Studios',
-  //   summary:
-  //     'Managed game server deployments and a dedicated hypervisor; operated internal developer services including TeamCity, YouTrack, Jenkins, and Mailcow; built an intranet over Headscale VPN; and supported Scala project tickets.',
-  //   tags: ['Linux', 'Proxmox', 'TeamCity', 'YouTrack', 'Jenkins', 'Mailcow', 'Headscale'],
-  // },
   {
     years: 'Apr 2023',
     role: 'Volunteer',
@@ -286,6 +299,7 @@ app.innerHTML = `
                       <div class="record-content">
                         <h3>${item.role}</h3>
                         <p class="company">${item.company}</p>
+                        ${item.location ? `<p class="record-location">${item.location}</p>` : ''}
                         <p class="summary">${item.summary}</p>
                         <div class="tags">
                           ${item.tags.map((tag) => `<span>${tag}</span>`).join('')}
