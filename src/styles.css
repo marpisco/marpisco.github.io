@@ -265,7 +265,7 @@ button:focus-visible {
 }
 
 .file-tab::before {
-  content: 'TS';
+  content: 'C#';
   margin-right: 8px;
   color: var(--cyan);
   font-weight: 800;
@@ -422,23 +422,10 @@ button:focus-visible {
   margin-left: 2px;
   background: var(--cyan);
   vertical-align: -0.16em;
-  animation: cursor-blink 850ms steps(1, end) infinite;
 }
 
 .typing-cursor.is-hidden {
   display: none;
-}
-
-@keyframes cursor-blink {
-  0%,
-  45% {
-    opacity: 1;
-  }
-
-  46%,
-  100% {
-    opacity: 0;
-  }
 }
 
 .hero-actions,

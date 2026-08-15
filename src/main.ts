@@ -182,15 +182,15 @@ app.innerHTML = `
     <nav class="container nav-wrap" aria-label="Primary navigation">
       <a class="brand" href="#home"><span>&lt;</span>marcopisco.com<span> /&gt;</span></a>
       <p class="repository-path" aria-label="Current file">
-        portfolio <span>/</span> src <span>/</span> <strong>Main.cs</strong>
+        portfolio <span>/</span> src <span>/</span> <strong>Program.cs</strong>
       </p>
       <div class="nav-actions">
         <div class="nav-links">
-          <a href="#about">about()</a>
-          <a href="#skills">stack[]</a>
-          <a href="#experience">experience[]</a>
-          <a href="#education">education</a>
-          <a href="#contact">contact()</a>
+          <a href="#about">About()</a>
+          <a href="#skills">TechStack</a>
+          <a href="#experience">Experience</a>
+          <a href="#education">Education</a>
+          <a href="#contact">Contact()</a>
         </div>
         <button id="theme-toggle" class="theme-toggle" type="button">
           <span id="theme-icon" aria-hidden="true">◐</span>
@@ -217,12 +217,12 @@ app.innerHTML = `
             <span id="discord-presence-activity" class="presence-activity hidden"></span>
           </div>
           <h1>
-            <span class="hero-declaration">const introduction =</span>
+            <span class="hero-declaration">string introduction =</span>
             Hi, I am <strong>Marco Pisco</strong>.
           </h1>
           <p class="hero-subtitle">
             <span class="typed-declaration" aria-hidden="true">
-              <span class="typed-keyword">const</span>
+              <span class="typed-keyword">string</span>
               <span class="typed-variable">subtitle</span>
               <span class="typed-operator"> = </span>
               <span class="typed-string">&quot;<span id="typed-subtitle"></span><span class="typing-cursor"></span>&quot;</span>;
@@ -238,10 +238,11 @@ app.innerHTML = `
           <div class="avatar-frame">
             <img class="avatar" src="/images/marco-profile.png" alt="Marco Pisco" />
           </div>
-          <pre class="profile-code" aria-label="Profile summary"><code><span>interface</span> Profile {
-  <strong>role</strong>: "Developer";
-  <strong>focus</strong>: "Systems";
-  <strong>location</strong>: "Portugal";
+          <pre class="profile-code" aria-label="Profile summary"><code><span>public class</span> Profile
+{
+  public string <strong>Role</strong> { get; init; } = "Developer";
+  public string <strong>Focus</strong> { get; init; } = "Systems";
+  public string <strong>Location</strong> { get; init; } = "Portugal";
 }</code></pre>
         </aside>
       </div>
@@ -260,9 +261,9 @@ app.innerHTML = `
           <p class="explorer-root">MARCOPISCO.COM</p>
           <ul class="repository-tree">
             <li><a class="tree-file csharp" href="#about">About.cs</a></li>
-            <li><a class="tree-file json" href="#skills">stack.json</a></li>
+            <li><a class="tree-file csharp" href="#skills">TechStack.cs</a></li>
             <li><a class="tree-file csharp" href="#experience">Experience.cs</a></li>
-            <li><a class="tree-file markdown" href="#education">education.md</a></li>
+            <li><a class="tree-file markdown" href="#education">Education.md</a></li>
             <li><a class="tree-file csharp" href="#contact">Contact.cs</a></li>
           </ul>
         </aside>
@@ -270,7 +271,7 @@ app.innerHTML = `
         <div class="workspace-content">
           <article id="about" class="code-section">
             <p class="section-comment">About me</p>
-            <h2><span>export</span> About Me</h2>
+            <h2><span>public</span> About Me</h2>
             <div class="about-copy">
               <p>
                 I am a software developer and system administrator focused on
@@ -285,7 +286,7 @@ app.innerHTML = `
 
           <article id="skills" class="code-section">
             <p class="section-comment">Tech stack</p>
-            <h2><span>const</span> Tech Stack[]</h2>
+            <h2><span>List&lt;string&gt;</span> TechStack</h2>
             <div class="skills">
               ${techStack.map((skill) => `<span class="skill">${skill}</span>`).join('')}
             </div>
@@ -293,7 +294,7 @@ app.innerHTML = `
 
           <article id="experience" class="code-section">
             <p class="section-comment">Experience records</p>
-            <h2><span>export</span> Experience[]</h2>
+            <h2><span>List&lt;Experience&gt;</span> Experience</h2>
             <div class="records">
               ${experience
                 .map(
@@ -318,7 +319,7 @@ app.innerHTML = `
 
           <article id="education" class="code-section">
             <p class="section-comment">Education</p>
-            <h2><span>read</span> Education.md</h2>
+            <h2><span>Read</span> Education.md</h2>
             <div class="records">
               ${education
                 .map(
@@ -342,7 +343,7 @@ app.innerHTML = `
 
           <article id="contact" class="code-section contact-section">
             <p class="section-comment">Contact</p>
-            <h2><span>await</span> Get In Touch()</h2>
+            <h2><span>await</span> GetInTouchAsync()</h2>
             <p class="contact-copy">
               If you need help with platform engineering, production hardening,
               or full-stack delivery, I am available for collaborations.
@@ -486,12 +487,7 @@ function setupLanyardPresence(): void {
 
     socket = new WebSocket(LANYARD_SOCKET_ENDPOINT);
     socket.addEventListener('open', () => {
-      socket?.send(
-        JSON.stringify({
-          op: 2,
-          d: { subscribe_to_id: LANYARD_USER_ID },
-        }),
-      );
+      socket?.send(JSON.stringify({ op: 2, d: { subscribe_to_id: LANYARD_USER_ID } }));
     });
     socket.addEventListener('message', (event: MessageEvent<string>) => {
       let message: LanyardSocketMessage;
