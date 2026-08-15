@@ -1,4 +1,4 @@
-export type TypingDirection = 'typing' | 'deleting';
+export type TypingDirection = 'typing' | 'deleting' | 'complete';
 
 export interface TypingState {
   messageIndex: number;
@@ -27,10 +27,14 @@ export function nextTypingState(
 
   if (state.direction === 'typing') {
     if (state.visibleCharacters >= message.length) {
-      return { ...state, direction: 'deleting' };
+      return { ...state, direction: 'complete' };
     }
 
     return { ...state, visibleCharacters: state.visibleCharacters + 1 };
+  }
+
+  if (state.direction === 'complete') {
+    return state;
   }
 
   if (state.visibleCharacters > 0) {

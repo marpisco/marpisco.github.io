@@ -13,6 +13,7 @@ import {
   type TypingState,
 } from './typing';
 import {
+  createVisibilityPolling,
   getPresenceActivity,
   getStatusLabel,
   type LanyardPresence,
@@ -66,7 +67,6 @@ const techStack = [
 
 const LANYARD_USER_ID = '1060304285457448970';
 const LANYARD_REST_ENDPOINT = `https://api.lanyard.rest/v1/users/${LANYARD_USER_ID}`;
-const LANYARD_SOCKET_ENDPOINT = 'wss://api.lanyard.rest/socket';
 
 const experience: Experience[] = [
   {
@@ -370,12 +370,6 @@ type LanyardRestResponse = {
   data?: LanyardPresence;
 };
 
-type LanyardSocketMessage = {
-  op: number;
-  t?: string;
-  d?: unknown;
-};
-
 function isLanyardPresence(value: unknown): value is LanyardPresence {
   if (!value || typeof value !== 'object') {
     return false;
@@ -383,21 +377,6 @@ function isLanyardPresence(value: unknown): value is LanyardPresence {
 
   const candidate = value as Partial<LanyardPresence>;
   return typeof candidate.discord_status === 'string' && Array.isArray(candidate.activities);
-}
-
-function findPresence(value: unknown): LanyardPresence | null {
-  if (isLanyardPresence(value)) {
-    return value;
-  }
-
-  if (value && typeof value === 'object') {
-    const presence = (value as Record<string, unknown>)[LANYARD_USER_ID];
-    if (isLanyardPresence(presence)) {
-      return presence;
-    }
-  }
-
-  return null;
 }
 
 function renderLanyardPresence(presence: LanyardPresence): void {
@@ -437,108 +416,58 @@ function renderLanyardUnavailable(): void {
   activity.classList.add('hidden');
 }
 
-async function loadLanyardPresence(): Promise<void> {
-  try {
-    const response = await fetch(LANYARD_REST_ENDPOINT);
-    if (!response.ok) {
-      throw new Error('Lanyard REST request failed');
-    }
-
-    const payload = (await response.json()) as LanyardRestResponse;
-    if (!payload.success || !isLanyardPresence(payload.data)) {
-      throw new Error('Lanyard returned no presence');
-    }
-
-    renderLanyardPresence(payload.data);
-  } catch {
-    renderLanyardUnavailable();
-  }
-}
-
 function setupLanyardPresence(): void {
-  let socket: WebSocket | null = null;
-  let heartbeatId: number | null = null;
-  let reconnectId: number | null = null;
-  let stopped = false;
+  let activeRequest: AbortController | null = null;
 
-  const clearHeartbeat = (): void => {
-    if (heartbeatId !== null) {
-      window.clearInterval(heartbeatId);
-      heartbeatId = null;
-    }
-  };
-
-  const scheduleReconnect = (): void => {
-    if (stopped || reconnectId !== null) {
+  const loadLanyardPresence = async (): Promise<void> => {
+    if (activeRequest) {
       return;
     }
 
-    reconnectId = window.setTimeout(() => {
-      reconnectId = null;
-      connect();
-    }, 15_000);
+    const controller = new AbortController();
+    activeRequest = controller;
+
+    try {
+      const response = await fetch(LANYARD_REST_ENDPOINT, { signal: controller.signal });
+      if (!response.ok) {
+        throw new Error('Lanyard REST request failed');
+      }
+
+      const payload = (await response.json()) as LanyardRestResponse;
+      if (!payload.success || !isLanyardPresence(payload.data)) {
+        throw new Error('Lanyard returned no presence');
+      }
+
+      renderLanyardPresence(payload.data);
+    } catch {
+      if (!controller.signal.aborted) {
+        renderLanyardUnavailable();
+      }
+    } finally {
+      if (activeRequest === controller) {
+        activeRequest = null;
+      }
+    }
   };
 
-  function connect(): void {
-    if (stopped || typeof WebSocket === 'undefined') {
-      return;
-    }
-
-    socket = new WebSocket(LANYARD_SOCKET_ENDPOINT);
-    socket.addEventListener('open', () => {
-      socket?.send(
-        JSON.stringify({
-          op: 2,
-          d: { subscribe_to_id: LANYARD_USER_ID },
-        }),
-      );
-    });
-    socket.addEventListener('message', (event: MessageEvent<string>) => {
-      let message: LanyardSocketMessage;
-      try {
-        message = JSON.parse(event.data) as LanyardSocketMessage;
-      } catch {
-        return;
-      }
-
-      if (message.op === 1 && message.d && typeof message.d === 'object') {
-        const heartbeatInterval = (message.d as { heartbeat_interval?: unknown }).heartbeat_interval;
-        if (typeof heartbeatInterval === 'number' && heartbeatInterval > 0) {
-          clearHeartbeat();
-          heartbeatId = window.setInterval(() => {
-            socket?.send(JSON.stringify({ op: 3, d: null }));
-          }, heartbeatInterval);
-        }
-        return;
-      }
-
-      if (message.op === 0 && (message.t === 'INIT_STATE' || message.t === 'PRESENCE_UPDATE')) {
-        const presence = findPresence(message.d);
-        if (presence) {
-          renderLanyardPresence(presence);
-        }
-      }
-    });
-    socket.addEventListener('close', () => {
-      clearHeartbeat();
-      scheduleReconnect();
-    });
-    socket.addEventListener('error', () => {
-      socket?.close();
-    });
-  }
-
-  window.addEventListener('beforeunload', () => {
-    stopped = true;
-    clearHeartbeat();
-    if (reconnectId !== null) {
-      window.clearTimeout(reconnectId);
-    }
-    socket?.close();
+  const polling = createVisibilityPolling(() => {
+    void loadLanyardPresence();
+  }, {
+    isVisible: () => document.visibilityState !== 'hidden',
+    addVisibilityListener: (listener) => {
+      document.addEventListener('visibilitychange', listener);
+      return () => document.removeEventListener('visibilitychange', listener);
+    },
+    setInterval: (callback, delay) => window.setInterval(callback, delay),
+    clearInterval: (id) => window.clearInterval(id),
   });
 
-  void loadLanyardPresence();
-  connect();
+  window.addEventListener('beforeunload', () => {
+    polling.stop();
+    activeRequest?.abort();
+  }, { once: true });
+
+  polling.start();
 }
 
 function setupScrollReveal(root: ParentNode = document): void {
@@ -620,9 +549,6 @@ function setupTypingSubtitle(): void {
   }
 
   const typingDelay = 48;
-  const deletingDelay = 28;
-  const messageHold = 1600;
-  const messageGap = 350;
   let state: TypingState = { ...INITIAL_TYPING_STATE };
 
   const render = (): void => {
@@ -632,19 +558,18 @@ function setupTypingSubtitle(): void {
 
   const scheduleNextCharacter = (): void => {
     const message = HERO_MESSAGES[state.messageIndex];
-    let delay = state.direction === 'typing' ? typingDelay : deletingDelay;
-
     if (state.direction === 'typing' && state.visibleCharacters >= message.length) {
-      delay = messageHold;
-    } else if (state.direction === 'deleting' && state.visibleCharacters === 0) {
-      delay = messageGap;
+      state = nextTypingState(state, HERO_MESSAGES);
+      render();
+      cursor.classList.add('is-hidden');
+      return;
     }
 
     window.setTimeout(() => {
       state = nextTypingState(state, HERO_MESSAGES);
       render();
       scheduleNextCharacter();
-    }, delay);
+    }, typingDelay);
   };
 
   render();
