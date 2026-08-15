@@ -13,7 +13,7 @@ import {
   type TypingState,
 } from './typing';
 import {
-  createVisibilityPolling,
+  createLanyardPresencePolling,
   getPresenceActivity,
   getStatusLabel,
   type LanyardPresence,
@@ -417,54 +417,37 @@ function renderLanyardUnavailable(): void {
 }
 
 function setupLanyardPresence(): void {
-  let activeRequest: AbortController | null = null;
-
-  const loadLanyardPresence = async (): Promise<void> => {
-    if (activeRequest) {
-      return;
+  const loadLanyardPresence = async (signal: AbortSignal): Promise<LanyardPresence> => {
+    const response = await fetch(LANYARD_REST_ENDPOINT, { signal });
+    if (!response.ok) {
+      throw new Error('Lanyard REST request failed');
     }
 
-    const controller = new AbortController();
-    activeRequest = controller;
-
-    try {
-      const response = await fetch(LANYARD_REST_ENDPOINT, { signal: controller.signal });
-      if (!response.ok) {
-        throw new Error('Lanyard REST request failed');
-      }
-
-      const payload = (await response.json()) as LanyardRestResponse;
-      if (!payload.success || !isLanyardPresence(payload.data)) {
-        throw new Error('Lanyard returned no presence');
-      }
-
-      renderLanyardPresence(payload.data);
-    } catch {
-      if (!controller.signal.aborted) {
-        renderLanyardUnavailable();
-      }
-    } finally {
-      if (activeRequest === controller) {
-        activeRequest = null;
-      }
+    const payload = (await response.json()) as LanyardRestResponse;
+    if (!payload.success || !isLanyardPresence(payload.data)) {
+      throw new Error('Lanyard returned no presence');
     }
+
+    return payload.data;
   };
 
-  const polling = createVisibilityPolling(() => {
-    void loadLanyardPresence();
-  }, {
-    isVisible: () => document.visibilityState !== 'hidden',
-    addVisibilityListener: (listener) => {
-      document.addEventListener('visibilitychange', listener);
-      return () => document.removeEventListener('visibilitychange', listener);
+  const polling = createLanyardPresencePolling({
+    loadPresence: loadLanyardPresence,
+    renderPresence: renderLanyardPresence,
+    renderUnavailable: renderLanyardUnavailable,
+    environment: {
+      isVisible: () => document.visibilityState !== 'hidden',
+      addVisibilityListener: (listener) => {
+        document.addEventListener('visibilitychange', listener);
+        return () => document.removeEventListener('visibilitychange', listener);
+      },
+      setInterval: (callback, delay) => window.setInterval(callback, delay),
+      clearInterval: (id) => window.clearInterval(id),
     },
-    setInterval: (callback, delay) => window.setInterval(callback, delay),
-    clearInterval: (id) => window.clearInterval(id),
   });
 
   window.addEventListener('beforeunload', () => {
     polling.stop();
-    activeRequest?.abort();
   }, { once: true });
 
   polling.start();

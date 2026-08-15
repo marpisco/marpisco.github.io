@@ -30,6 +30,13 @@ export type VisibilityPolling = {
   stop: () => void;
 };
 
+export type LanyardPresencePollingOptions = {
+  loadPresence: (signal: AbortSignal) => Promise<LanyardPresence>;
+  renderPresence: (presence: LanyardPresence) => void;
+  renderUnavailable: () => void;
+  environment: VisibilityPollingEnvironment;
+};
+
 export function createVisibilityPolling(
   refresh: () => void,
   environment: VisibilityPollingEnvironment,
@@ -93,6 +100,46 @@ export function createVisibilityPolling(
       clearPollingInterval();
       removeVisibilityListener?.();
       removeVisibilityListener = null;
+    },
+  };
+}
+
+export function createLanyardPresencePolling(
+  options: LanyardPresencePollingOptions,
+): VisibilityPolling {
+  let activeRequest: AbortController | null = null;
+
+  const refresh = async (): Promise<void> => {
+    if (activeRequest) {
+      return;
+    }
+
+    const controller = new AbortController();
+    activeRequest = controller;
+
+    try {
+      const presence = await options.loadPresence(controller.signal);
+      options.renderPresence(presence);
+    } catch {
+      if (!controller.signal.aborted) {
+        options.renderUnavailable();
+      }
+    } finally {
+      if (activeRequest === controller) {
+        activeRequest = null;
+      }
+    }
+  };
+
+  const visibilityPolling = createVisibilityPolling(() => {
+    void refresh();
+  }, options.environment);
+
+  return {
+    start: visibilityPolling.start,
+    stop: () => {
+      visibilityPolling.stop();
+      activeRequest?.abort();
     },
   };
 }
