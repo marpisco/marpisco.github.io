@@ -22,30 +22,12 @@ describe('typing subtitle state', () => {
     ).toEqual({ messageIndex: 0, visibleCharacters: 3, direction: 'complete' });
   });
 
-  test('removes one character while deleting', () => {
+  test('keeps a completed subtitle unchanged', () => {
     expect(
       nextTypingState(
-        { messageIndex: 0, visibleCharacters: 2, direction: 'deleting' },
+        { messageIndex: 0, visibleCharacters: 3, direction: 'complete' },
         messages,
       ),
-    ).toEqual({ messageIndex: 0, visibleCharacters: 1, direction: 'deleting' });
-  });
-
-  test('advances to the next message after deleting the complete string', () => {
-    expect(
-      nextTypingState(
-        { messageIndex: 0, visibleCharacters: 0, direction: 'deleting' },
-        messages,
-      ),
-    ).toEqual({ messageIndex: 1, visibleCharacters: 0, direction: 'typing' });
-  });
-
-  test('wraps back to the first message after deleting the final string', () => {
-    expect(
-      nextTypingState(
-        { messageIndex: 1, visibleCharacters: 0, direction: 'deleting' },
-        messages,
-      ),
-    ).toEqual({ messageIndex: 0, visibleCharacters: 0, direction: 'typing' });
+    ).toEqual({ messageIndex: 0, visibleCharacters: 3, direction: 'complete' });
   });
 });

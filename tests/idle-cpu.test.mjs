@@ -68,4 +68,52 @@ describe('idle CPU behavior', () => {
     polling.stop();
     assert.deepEqual(clearedIntervals, [7, 7]);
   });
+
+  test('requests presence immediately, prevents overlap, and aborts on stop', async () => {
+    const { createLanyardPresencePolling } = lanyard;
+    let intervalCallback;
+    let intervalDelay;
+    const requestSignals = [];
+    const renderedStatuses = [];
+
+    const polling = createLanyardPresencePolling({
+      loadPresence: async (signal) => {
+        requestSignals.push(signal);
+        return { discord_status: 'online', activities: [], spotify: null };
+      },
+      renderPresence: (presence) => {
+        renderedStatuses.push(presence.discord_status);
+      },
+      renderUnavailable: () => {
+        throw new Error('A successful presence request must not render unavailable.');
+      },
+      environment: {
+        isVisible: () => true,
+        addVisibilityListener: () => () => {},
+        setInterval: (callback, delay) => {
+          intervalCallback = callback;
+          intervalDelay = delay;
+          return 1;
+        },
+        clearInterval: () => {},
+      },
+    });
+
+    polling.start();
+    assert.equal(requestSignals.length, 1);
+    assert.equal(intervalDelay, 10_000);
+
+    intervalCallback();
+    assert.equal(requestSignals.length, 1);
+
+    await Promise.resolve();
+    await Promise.resolve();
+    assert.deepEqual(renderedStatuses, ['online']);
+
+    intervalCallback();
+    assert.equal(requestSignals.length, 2);
+
+    polling.stop();
+    assert.equal(requestSignals[1].aborted, true);
+  });
 });
