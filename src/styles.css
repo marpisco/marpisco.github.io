@@ -617,8 +617,8 @@ button:focus-visible {
   background: var(--surface-solid);
 }
 
-.tree-file.typescript::before {
-  content: 'TS';
+.tree-file.csharp::before {
+  content: 'C#';
   color: var(--cyan);
   font-size: 0.56rem;
   font-weight: 800;
