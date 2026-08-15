@@ -13,13 +13,13 @@ describe('typing subtitle state', () => {
     ).toEqual({ messageIndex: 0, visibleCharacters: 2, direction: 'typing' });
   });
 
-  test('starts deleting after the full message has been displayed', () => {
+  test('stops after the full message has been displayed', () => {
     expect(
       nextTypingState(
         { messageIndex: 0, visibleCharacters: 3, direction: 'typing' },
         messages,
       ),
-    ).toEqual({ messageIndex: 0, visibleCharacters: 3, direction: 'deleting' });
+    ).toEqual({ messageIndex: 0, visibleCharacters: 3, direction: 'complete' });
   });
 
   test('removes one character while deleting', () => {

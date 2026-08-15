@@ -18,6 +18,85 @@ export type LanyardPresence = {
 
 type PresenceActivityInput = Pick<LanyardPresence, 'activities' | 'spotify'>;
 
+export type VisibilityPollingEnvironment = {
+  isVisible: () => boolean;
+  addVisibilityListener: (listener: () => void) => () => void;
+  setInterval: (callback: () => void, delay: number) => number;
+  clearInterval: (id: number) => void;
+};
+
+export type VisibilityPolling = {
+  start: () => void;
+  stop: () => void;
+};
+
+export function createVisibilityPolling(
+  refresh: () => void,
+  environment: VisibilityPollingEnvironment,
+  intervalMs = 10_000,
+): VisibilityPolling {
+  let intervalId: number | null = null;
+  let removeVisibilityListener: (() => void) | null = null;
+  let started = false;
+  let lastVisibility: boolean | null = null;
+
+  const clearPollingInterval = (): void => {
+    if (intervalId !== null) {
+      environment.clearInterval(intervalId);
+      intervalId = null;
+    }
+  };
+
+  const poll = (): void => {
+    if (environment.isVisible()) {
+      refresh();
+    }
+  };
+
+  const syncVisibility = (): void => {
+    if (!started) {
+      return;
+    }
+
+    const visible = environment.isVisible();
+    if (visible === lastVisibility) {
+      return;
+    }
+
+    lastVisibility = visible;
+    if (!visible) {
+      clearPollingInterval();
+      return;
+    }
+
+    poll();
+    intervalId = environment.setInterval(poll, intervalMs);
+  };
+
+  return {
+    start: () => {
+      if (started) {
+        return;
+      }
+
+      started = true;
+      removeVisibilityListener = environment.addVisibilityListener(syncVisibility);
+      syncVisibility();
+    },
+    stop: () => {
+      if (!started) {
+        return;
+      }
+
+      started = false;
+      lastVisibility = null;
+      clearPollingInterval();
+      removeVisibilityListener?.();
+      removeVisibilityListener = null;
+    },
+  };
+}
+
 export function getStatusLabel(status: string): string {
   if (status === 'dnd') {
     return 'Do Not Disturb';
