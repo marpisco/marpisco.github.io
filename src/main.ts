@@ -612,13 +612,6 @@ function setupTypingSubtitle(): void {
     return;
   }
 
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduceMotion) {
-    subtitle.textContent = HERO_MESSAGES[0];
-    cursor.classList.add('is-hidden');
-    return;
-  }
-
   const typingDelay = 48;
   const deletingDelay = 28;
   const messageHold = 1600;
