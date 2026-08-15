@@ -307,6 +307,60 @@ button:focus-visible,
   content: '// ';
 }
 
+.discord-presence {
+  width: fit-content;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: clamp(0.66rem, 0.2vw + 0.61rem, 0.76rem);
+  line-height: 1.5;
+}
+
+.presence-indicator {
+  width: 0.72em;
+  height: 0.72em;
+  flex: 0 0 auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--line-strong);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--line-strong) 16%, transparent);
+}
+
+.discord-presence[data-status='online'] .presence-indicator {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--green) 16%, transparent);
+}
+
+.discord-presence[data-status='idle'] .presence-indicator {
+  background: var(--pink);
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pink) 16%, transparent);
+}
+
+.discord-presence[data-status='dnd'] .presence-indicator {
+  background: var(--cyan);
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 16%, transparent);
+}
+
+.presence-activity {
+  max-width: 100%;
+  color: var(--cyan);
+  overflow-wrap: anywhere;
+}
+
+.presence-activity::before {
+  content: '·';
+  margin-right: 8px;
+  color: var(--line-strong);
+}
+
 .hero h1 {
   max-width: 760px;
   margin: 0;
