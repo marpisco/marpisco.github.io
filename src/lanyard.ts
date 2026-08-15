@@ -18,6 +18,14 @@ export type LanyardPresence = {
 
 type PresenceActivityInput = Pick<LanyardPresence, 'activities' | 'spotify'>;
 
+const ACTIVITY_TYPE_LABELS: Record<number, string> = {
+  0: 'Playing',
+  1: 'Streaming',
+  2: 'Listening',
+  3: 'Watching',
+  5: 'Competing',
+};
+
 export function getStatusLabel(status: string): string {
   if (status === 'dnd') {
     return 'Do Not Disturb';
@@ -35,16 +43,29 @@ export function getStatusLabel(status: string): string {
 }
 
 export function getPresenceActivity(presence: PresenceActivityInput): string | null {
+  const activities: string[] = [];
+
   if (presence.spotify?.song && presence.spotify.artist) {
-    return `Listening to ${presence.spotify.song} · ${presence.spotify.artist}`;
+    activities.push(`Listening to ${presence.spotify.song} — ${presence.spotify.artist}`);
   }
 
-  const activity = presence.activities.find((item) => item.type !== 4);
-  if (activity?.name) {
+  for (const activity of presence.activities) {
+    if (activities.length === 2 || activity.type === 4 || !activity.name) {
+      continue;
+    }
+
+    if (presence.spotify && activity.name === 'Spotify') {
+      continue;
+    }
+
+    const typeLabel = ACTIVITY_TYPE_LABELS[activity.type] ?? 'Active on';
     const details = [activity.details, activity.state].filter(Boolean).join(' · ');
-    return details ? `${activity.name} · ${details}` : activity.name;
+    activities.push(
+      details
+        ? `${typeLabel} ${activity.name} — ${details}`
+        : `${typeLabel} ${activity.name}`,
+    );
   }
 
-  const customStatus = presence.activities.find((item) => item.type === 4);
-  return customStatus?.state || null;
+  return activities.length > 0 ? activities.join(' · ') : null;
 }

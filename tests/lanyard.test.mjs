@@ -15,24 +15,37 @@ describe('Lanyard presence formatting', () => {
         activities: [],
         spotify: { song: 'Satellite', artist: 'Måneskin' },
       }),
-    ).toBe('Listening to Satellite · Måneskin');
+    ).toBe('Listening to Satellite — Måneskin');
   });
 
-  test('formats a regular Discord activity with its details', () => {
+  test('formats a regular Discord activity with its type and details', () => {
     expect(
       getPresenceActivity({
         activities: [{ type: 0, name: 'Visual Studio Code', details: 'Editing main.ts', state: 'marpisco.com' }],
         spotify: null,
       }),
-    ).toBe('Visual Studio Code · Editing main.ts · marpisco.com');
+    ).toBe('Playing Visual Studio Code — Editing main.ts · marpisco.com');
   });
 
-  test('falls back to a custom status when no activity is active', () => {
+  test('shows two current activities and removes the duplicate Spotify record', () => {
+    expect(
+      getPresenceActivity({
+        activities: [
+          { type: 2, name: 'Spotify', details: 'Satellite', state: 'Måneskin' },
+          { type: 0, name: 'Visual Studio Code', details: 'Editing Home.cs' },
+          { type: 3, name: 'YouTube', details: 'Watching a tutorial' },
+        ],
+        spotify: { song: 'Satellite', artist: 'Måneskin' },
+      }),
+    ).toBe('Listening to Satellite — Måneskin · Playing Visual Studio Code — Editing Home.cs');
+  });
+
+  test('does not publish a custom Discord status as an activity', () => {
     expect(
       getPresenceActivity({
         activities: [{ type: 4, name: 'Custom Status', state: 'Building things' }],
         spotify: null,
       }),
-    ).toBe('Building things');
+    ).toBeNull();
   });
 });

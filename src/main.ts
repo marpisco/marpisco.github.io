@@ -182,7 +182,7 @@ app.innerHTML = `
     <nav class="container nav-wrap" aria-label="Primary navigation">
       <a class="brand" href="#home"><span>&lt;</span>marcopisco.com<span> /&gt;</span></a>
       <p class="repository-path" aria-label="Current file">
-        portfolio <span>/</span> src <span>/</span> <strong>main.ts</strong>
+        portfolio <span>/</span> src <span>/</span> <strong>Main.cs</strong>
       </p>
       <div class="nav-actions">
         <div class="nav-links">
@@ -206,7 +206,7 @@ app.innerHTML = `
         <span class="window-dot"></span>
         <span class="window-dot"></span>
         <span class="window-dot"></span>
-        <span class="file-tab">home.ts</span>
+        <span class="file-tab">Home.cs</span>
       </div>
       <div class="hero">
         <div class="hero-copy">
@@ -259,11 +259,11 @@ app.innerHTML = `
           <p class="explorer-heading">Explorer</p>
           <p class="explorer-root">MARCOPISCO.COM</p>
           <ul class="repository-tree">
-            <li><a class="tree-file typescript" href="#about">about.ts</a></li>
+            <li><a class="tree-file csharp" href="#about">About.cs</a></li>
             <li><a class="tree-file json" href="#skills">stack.json</a></li>
-            <li><a class="tree-file typescript" href="#experience">experience.ts</a></li>
+            <li><a class="tree-file csharp" href="#experience">Experience.cs</a></li>
             <li><a class="tree-file markdown" href="#education">education.md</a></li>
-            <li><a class="tree-file typescript" href="#contact">contact.ts</a></li>
+            <li><a class="tree-file csharp" href="#contact">Contact.cs</a></li>
           </ul>
         </aside>
 
