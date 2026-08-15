@@ -714,7 +714,7 @@ function setupScrollReveal(root: ParentNode = document): void {
   );
   const blockTargets = Array.from(
     root.querySelectorAll<HTMLElement>(
-      '.workspace-window, .hero-media, .avatar-frame, .code-section, .contact-actions, .writeup-viewer',
+      '.hero-media, .avatar-frame, .code-section, .contact-actions, .writeup-viewer',
     ),
   );
   const targets = Array.from(new Set([...textTargets, ...blockTargets]));
@@ -758,8 +758,8 @@ function setupScrollReveal(root: ParentNode = document): void {
       }
     },
     {
-      threshold: 0.18,
-      rootMargin: '0px 0px -8% 0px',
+      threshold: 0,
+      rootMargin: '0px 0px -4% 0px',
     },
   );
 
