@@ -87,8 +87,7 @@ button {
 }
 
 a:focus-visible,
-button:focus-visible,
-.writeup-card:focus-visible {
+button:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 3px;
 }
@@ -766,8 +765,7 @@ button:focus-visible,
   min-width: 0;
 }
 
-.record h3,
-.writeup-viewer h3 {
+.record h3 {
   margin: 0;
   font-size: clamp(1.04rem, 0.55vw + 0.92rem, 1.24rem);
   line-height: 1.3;
@@ -824,101 +822,6 @@ button:focus-visible,
 
 .education-record .record-date {
   color: var(--violet);
-}
-
-.empty-state {
-  min-height: 220px;
-  display: grid;
-  grid-template-columns: 1fr;
-  place-items: center;
-  color: var(--muted);
-  border-style: dashed;
-  background:
-    repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 12px,
-      var(--glow) 12px,
-      var(--glow) 13px
-    ),
-    var(--surface-solid);
-  text-align: center;
-}
-
-.empty-state .summary {
-  margin: 0;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-}
-
-.writeup-card {
-  cursor: pointer;
-}
-
-.writeup-card:hover {
-  border-color: var(--cyan);
-}
-
-.writeup-viewer {
-  margin-top: 16px;
-  padding: clamp(24px, 4vw, 42px);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface-solid);
-  scroll-margin-top: 84px;
-}
-
-.writeup-viewer > h3 {
-  margin: 10px 0 12px;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
-}
-
-.writeup-viewer > .tags {
-  margin-top: 18px;
-}
-
-.writeup-content {
-  margin-top: 32px;
-  padding-top: 25px;
-  border-top: 1px solid var(--line);
-}
-
-.writeup-content h1,
-.writeup-content h2,
-.writeup-content h3 {
-  margin: 1.35rem 0 0.65rem;
-  color: var(--text);
-  letter-spacing: -0.03em;
-}
-
-.writeup-content p,
-.writeup-content li {
-  color: var(--muted);
-  line-height: 1.75;
-}
-
-.writeup-content code {
-  padding: 0.1rem 0.34rem;
-  color: var(--cyan);
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  background: var(--surface-2);
-  font-family: var(--mono);
-  font-size: 0.84rem;
-}
-
-.writeup-content pre {
-  padding: 16px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--surface-2);
-  overflow-x: auto;
-}
-
-.writeup-content pre code {
-  padding: 0;
-  border: 0;
-  background: transparent;
 }
 
 .contact-copy {

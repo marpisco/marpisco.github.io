@@ -16,7 +16,6 @@ Personal website source for [marcopisco.com](https://marcopisco.com), built with
 ## Features
 
 - Single-page portfolio layout (hero, about, tech stack, experience, education, contact)
-- Posts section backed by local Markdown files
 - Smooth reveal and hover animations
 - Responsive layout for desktop and mobile
 
@@ -38,25 +37,6 @@ bun run preview
 ```
 
 The production build is generated in `dist/`.
-
-## Posts Workflow
-
-Posts are loaded from the `public/writeups` directory:
-
-- `public/writeups/index.json` contains metadata for each post
-- `public/writeups/<slug>.md` contains the Markdown content
-
-Example `index.json` item:
-
-```json
-{
-  "slug": "example-post",
-  "title": "Example Post",
-  "date": "2026-01-15",
-  "summary": "Short summary.",
-  "tags": ["tag1", "tag2"]
-}
-```
 
 ## Deployment
 

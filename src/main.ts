@@ -35,14 +35,6 @@ type Education = {
   tags: string[];
 };
 
-type WriteupMeta = {
-  slug: string;
-  title: string;
-  date: string;
-  summary: string;
-  tags: string[];
-};
-
 const techStack = [
   'Git',
   'C#',
@@ -198,7 +190,6 @@ app.innerHTML = `
           <a href="#skills">stack[]</a>
           <a href="#experience">experience[]</a>
           <a href="#education">education</a>
-          <a href="#writeups">posts()</a>
           <a href="#contact">contact()</a>
         </div>
         <button id="theme-toggle" class="theme-toggle" type="button">
@@ -272,7 +263,6 @@ app.innerHTML = `
             <li><a class="tree-file json" href="#skills">stack.json</a></li>
             <li><a class="tree-file typescript" href="#experience">experience.ts</a></li>
             <li><a class="tree-file markdown" href="#education">education.md</a></li>
-            <li><a class="tree-file folder" href="#writeups">writeups/</a></li>
             <li><a class="tree-file typescript" href="#contact">contact.ts</a></li>
           </ul>
         </aside>
@@ -350,13 +340,6 @@ app.innerHTML = `
             </div>
           </article>
 
-          <article id="writeups" class="code-section">
-            <p class="section-comment">Posts</p>
-            <h2><span>fetch</span> Posts/</h2>
-            <div id="writeups-list" class="records"></div>
-            <article id="writeup-viewer" class="writeup-viewer hidden"></article>
-          </article>
-
           <article id="contact" class="code-section contact-section">
             <p class="section-comment">Contact</p>
             <h2><span>await</span> Get In Touch()</h2>
@@ -381,15 +364,6 @@ app.innerHTML = `
     </div>
   </footer>
 `;
-
-function escapeHtml(text: string): string {
-  return text
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}
 
 type LanyardRestResponse = {
   success: boolean;
@@ -567,145 +541,6 @@ function setupLanyardPresence(): void {
   connect();
 }
 
-function markdownToHtml(markdown: string): string {
-  const lines = markdown.replace(/\r\n/g, '\n').split('\n');
-  const html: string[] = [];
-  let inCode = false;
-  let inList = false;
-
-  for (const line of lines) {
-    const trimmed = line.trim();
-
-    if (trimmed.startsWith('```')) {
-      if (!inCode) {
-        if (inList) {
-          html.push('</ul>');
-          inList = false;
-        }
-        html.push('<pre><code>');
-        inCode = true;
-      } else {
-        html.push('</code></pre>');
-        inCode = false;
-      }
-      continue;
-    }
-
-    if (inCode) {
-      html.push(`${escapeHtml(line)}\n`);
-      continue;
-    }
-
-    if (!trimmed) {
-      if (inList) {
-        html.push('</ul>');
-        inList = false;
-      }
-      continue;
-    }
-
-    if (trimmed.startsWith('# ')) {
-      if (inList) {
-        html.push('</ul>');
-        inList = false;
-      }
-      html.push(`<h1>${escapeHtml(trimmed.slice(2))}</h1>`);
-      continue;
-    }
-
-    if (trimmed.startsWith('## ')) {
-      if (inList) {
-        html.push('</ul>');
-        inList = false;
-      }
-      html.push(`<h2>${escapeHtml(trimmed.slice(3))}</h2>`);
-      continue;
-    }
-
-    if (trimmed.startsWith('### ')) {
-      if (inList) {
-        html.push('</ul>');
-        inList = false;
-      }
-      html.push(`<h3>${escapeHtml(trimmed.slice(4))}</h3>`);
-      continue;
-    }
-
-    if (trimmed.startsWith('- ')) {
-      if (!inList) {
-        html.push('<ul>');
-        inList = true;
-      }
-      html.push(`<li>${escapeHtml(trimmed.slice(2))}</li>`);
-      continue;
-    }
-
-    if (inList) {
-      html.push('</ul>');
-      inList = false;
-    }
-
-    const withInlineCode = escapeHtml(trimmed).replace(/`([^`]+)`/g, '<code>$1</code>');
-    html.push(`<p>${withInlineCode}</p>`);
-  }
-
-  if (inList) {
-    html.push('</ul>');
-  }
-  if (inCode) {
-    html.push('</code></pre>');
-  }
-
-  return html.join('');
-}
-
-function renderWriteup(writeup: WriteupMeta): void {
-  const viewer = document.querySelector<HTMLElement>('#writeup-viewer');
-  if (!viewer) {
-    return;
-  }
-
-  viewer.classList.remove('hidden');
-  viewer.innerHTML = `<p class="summary">Loading ${escapeHtml(writeup.title)}...</p>`;
-
-  fetch(`/writeups/${writeup.slug}.md`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Writeup file not found');
-      }
-      return response.text();
-    })
-    .then((markdown) => {
-      const dateText = new Date(writeup.date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-
-      viewer.innerHTML = `
-        <p class="years">${escapeHtml(dateText)}</p>
-        <h3>${escapeHtml(writeup.title)}</h3>
-        <p class="summary">${escapeHtml(writeup.summary)}</p>
-        <div class="tags">${writeup.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}</div>
-        <div class="writeup-content">${markdownToHtml(markdown)}</div>
-      `;
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      viewer.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-    })
-    .catch(() => {
-      viewer.innerHTML = '<p class="summary">Failed to load this writeup file.</p>';
-    });
-}
-
-function closeWriteup(): void {
-  const viewer = document.querySelector<HTMLElement>('#writeup-viewer');
-  if (!viewer) {
-    return;
-  }
-  viewer.classList.add('hidden');
-  viewer.innerHTML = '';
-}
-
 function setupScrollReveal(root: ParentNode = document): void {
   const textTargets = Array.from(
     root.querySelectorAll<HTMLElement>(
@@ -714,7 +549,7 @@ function setupScrollReveal(root: ParentNode = document): void {
   );
   const blockTargets = Array.from(
     root.querySelectorAll<HTMLElement>(
-      '.hero-media, .avatar-frame, .code-section, .contact-actions, .writeup-viewer',
+      '.hero-media, .avatar-frame, .code-section, .contact-actions',
     ),
   );
   const targets = Array.from(new Set([...textTargets, ...blockTargets]));
@@ -868,78 +703,7 @@ function setupThemeControl(): void {
   applyTheme();
 }
 
-async function loadWriteups(): Promise<void> {
-  const list = document.querySelector<HTMLElement>('#writeups-list');
-  if (!list) {
-    return;
-  }
-  let openSlug: string | null = null;
-
-  try {
-    const response = await fetch('/writeups/index.json');
-    if (!response.ok) {
-      throw new Error('index not found');
-    }
-
-    const writeups = (await response.json()) as WriteupMeta[];
-    if (!Array.isArray(writeups) || writeups.length === 0) {
-      list.innerHTML = '<article class="record empty-state"><p class="summary">No writeups yet... :(</p></article>';
-      setupScrollReveal(list);
-      return;
-    }
-
-    list.innerHTML = writeups
-      .map(
-        (item) => `
-          <article class="record writeup-card" data-slug="${escapeHtml(item.slug)}">
-            <p class="record-date">${escapeHtml(item.date)}</p>
-            <div class="record-content">
-              <h3>${escapeHtml(item.title)}</h3>
-              <p class="summary">${escapeHtml(item.summary)}</p>
-              <div class="tags">${item.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}</div>
-            </div>
-          </article>
-        `,
-      )
-      .join('');
-
-    const cards = list.querySelectorAll<HTMLElement>('.writeup-card');
-    for (const card of cards) {
-      card.setAttribute('role', 'button');
-      card.setAttribute('tabindex', '0');
-
-      const toggleWriteup = (): void => {
-        const slug = card.dataset.slug;
-        if (slug && slug === openSlug) {
-          closeWriteup();
-          openSlug = null;
-          return;
-        }
-        const writeup = writeups.find((w) => w.slug === slug);
-        if (writeup) {
-          renderWriteup(writeup);
-          openSlug = writeup.slug;
-        }
-      };
-
-      card.addEventListener('click', toggleWriteup);
-      card.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          toggleWriteup();
-        }
-      });
-    }
-
-    setupScrollReveal(list);
-  } catch {
-    list.innerHTML = '<article class="record empty-state"><p class="summary">Writeups index missing. Add files to public/writeups.</p></article>';
-    setupScrollReveal(list);
-  }
-}
-
 setupTypingSubtitle();
 setupThemeControl();
 setupScrollReveal();
 setupLanyardPresence();
-void loadWriteups();
