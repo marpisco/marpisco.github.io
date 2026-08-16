@@ -82,6 +82,7 @@ const experience: Experience[] = [
     years: 'Oct 2025 - Present',
     role: 'Head of Systems / System Administrator',
     company: 'LunarLabs LLC',
+    location: 'Remote',
     summary:
       'Creating and maintaining company systems isolated within Proxmox containers, while maintaining and creating developer systems and platforms. Managing Microsoft 365 for single sign-on (SSO) environments.',
     tags: ['Informatics', 'Docker', 'Proxmox', 'Microsoft 365', 'Single Sign-On'],
