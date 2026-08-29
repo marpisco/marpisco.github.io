@@ -300,7 +300,7 @@ app.innerHTML = `
               ${experience
                 .map(
                   (item) => `
-                    <article class="record">
+                    <article class="record education-record">
                       <p class="record-date">${item.years}</p>
                       <div class="record-content">
                         <h3>${item.role}</h3>
