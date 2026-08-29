@@ -325,7 +325,7 @@ app.innerHTML = `
               ${education
                 .map(
                   (item) => `
-                    <article class="record education-record">
+                    <article class="record">
                       <p class="record-date">${item.years}</p>
                       <div class="record-content">
                         <h3>${item.school}</h3>
