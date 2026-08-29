@@ -727,6 +727,7 @@ button:focus-visible {
   gap: 26px;
   padding: 24px;
   border: 1px solid var(--line);
+  border-left: 3px solid var(--violet);
   border-radius: 8px;
   background: var(--surface-solid);
   transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
@@ -741,7 +742,7 @@ button:focus-visible {
 .record-date,
 .years {
   margin: 0;
-  color: var(--green);
+  color: var(--violet);
   font-family: var(--mono);
   font-size: 0.7rem;
   font-weight: 700;
@@ -801,14 +802,6 @@ button:focus-visible {
   font-family: var(--mono);
   font-size: clamp(0.56rem, 0.14vw + 0.52rem, 0.64rem);
   font-weight: 650;
-}
-
-.education-record {
-  border-left: 3px solid var(--violet);
-}
-
-.education-record .record-date {
-  color: var(--violet);
 }
 
 .contact-copy {
