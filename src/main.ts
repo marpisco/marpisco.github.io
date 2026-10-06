@@ -75,7 +75,7 @@ const experience: Experience[] = [
     company: 'Quantinfor - Consultoria Informática',
     location: 'Malveira · Hybrid',
     summary:
-      'Software development for multiple environments, including PHC Web and Primavera ERP. Maintenance and creation of software projects, internal tools, and platforms using repository history tracking, such as Git.',
+      'Software Development for multiple environments, including PHC Web and Primavera ERP. Maintenance and creation of Software Projects. Development of internal tools and platforms, using Repository history tracking projects, such as Git. Building AI-assistants and AI-related integrations for internal products.',
     tags: ['Informatics', 'Software Prototyping', 'Git', 'PHC Web', 'Primavera ERP'],
   },
   {
@@ -84,7 +84,7 @@ const experience: Experience[] = [
     company: 'LunarLabs LLC',
     location: 'Remote',
     summary:
-      'Creating and maintaining company systems isolated within Proxmox containers, while maintaining and creating developer systems and platforms. Managing Microsoft 365 for single sign-on (SSO) environments.',
+      "Build and maintain the company's infrastructure: Proxmox hypervisors, Docker services and the developer platforms (Forgejo, CI runners, internal tools). Run the company VPN (Headscale), DNS in Cloudflare, password management (Vaultwarden) and monitoring (Grafana). Manage Microsoft 365 and Entra ID for Single Sign-On (SSO) and mail. Handle security hardening, off-site backups and staff access.",
     tags: ['Informatics', 'Docker', 'Proxmox', 'Microsoft 365', 'Single Sign-On'],
   },
   {
@@ -93,16 +93,16 @@ const experience: Experience[] = [
     company: 'Darkless Ltd.',
     location: 'Remote',
     summary:
-      'Managing remote infrastructure, including hypervisors and client environments such as Pterodactyl Game Panel for Minecraft and Discord-related deployments. Handling support tickets, assisting with automations, and managing Office 365 for single sign-on (SSO).',
+      'Run the infrastructure of a hosting company with its own network (AS197924): a Proxmox hypervisor cluster, Arista core switches and BGP peering with the datacenter. Manage the customer platforms (Pterodactyl game hosting, VPS and dedicated servers through TenantOS, Paymenter billing). Run the company VPN (Headscale), DNS (Cloudflare and PowerDNS), mail, off-site backups (Proxmox Backup Server) and monitoring (Grafana, Prometheus). Manage Microsoft 365 and Entra ID for Single Sign-On (SSO) and mail. Handle incident response, security hardening, customer support tickets and automations.',
     tags: ['Server Administration', 'Proxmox', 'Pterodactyl', 'Microsoft 365', 'Automation'],
   },
   {
-    years: 'Feb 2025 - Present',
+    years: 'Feb 2025 - Oct 2026',
     role: 'Senior System Administrator',
     company: 'Scala Studios',
     location: 'Remote',
     summary:
-      'Managed game server deployments and a dedicated hypervisor; operated internal developer services including TeamCity, YouTrack, Jenkins, and Mailcow; built an intranet over Headscale VPN; and supported Scala project tickets.',
+      'Managed security and infrastructure for a Minecraft network, including Proxmox hypervisors, game servers and developer platforms. Enforced 2FA across all accounts and put internal services and databases behind a private VPN (Headscale). Handled incident response, off-site backups and migrations between providers.',
     tags: ['Infrastructure Management', 'Linux', 'Proxmox', 'TeamCity', 'YouTrack', 'Jenkins', 'Mailcow', 'Headscale'],
   },
   {
